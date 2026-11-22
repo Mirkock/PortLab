@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>PortLab</title>
+<title>PortLab</title><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="theme-color" content="#050507">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=Rubik+Glitch&family=UnifrakturCook:wght@700&family=Press+Start+2P&family=Anton&family=Monoton&family=Bungee&family=Bebas+Neue&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
 <style>
 :root{--bg:#050507;--p:#0f0f16;--l:#2a2a3a;--a:#d4ff00;--ch:linear-gradient(180deg,#fff 0,#9aa4b8 38%,#171b26 50%,#b9c2d6 62%,#fff 100%)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;height:100dvh;background:var(--bg);color:#e6eaf4;font:14px Syne,sans-serif;overflow:hidden}
+body{margin:0;height:var(--h,100dvh);background:var(--bg);color:#e6eaf4;font:14px Syne,sans-serif;overflow:hidden}
 [hidden]{display:none!important}
 .logo{font:34px 'Rubik Glitch',cursive;background:var(--ch);-webkit-background-clip:text;background-clip:text;color:transparent;margin:0;letter-spacing:2px}
 button,select,input,textarea{font:inherit;color:inherit}
@@ -23,7 +23,8 @@ h3{margin:0 0 6px;font:18px 'Bebas Neue',sans-serif;letter-spacing:2px;backgroun
 .cd{border:1px solid var(--l);background:var(--p);padding:8px}.cd img{width:100%;aspect-ratio:1;object-fit:contain;background:#000;display:block}
 .cd b{display:block;margin:6px 0 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cd small{color:#8e96aa}
 .cd div{display:flex;gap:4px;margin-top:6px}.cd button{flex:1;padding:4px;min-width:0}
-#ed{height:100%;display:grid;grid-template-columns:62px 1fr 300px}
+#ed{height:100%;display:grid;grid-template-columns:62px minmax(0,1fr) 300px;grid-template-rows:minmax(0,1fr)}
+#tools{grid-column:1;grid-row:1}#main{grid-column:2;grid-row:1;min-height:0}#side{grid-column:3;grid-row:1;min-height:0}
 #tools{display:flex;flex-direction:column;gap:5px;padding:6px;background:var(--p);border-right:1px solid var(--l);overflow:auto}
 #main{overflow:auto;display:flex;min-width:0;background:#08080c;background-image:radial-gradient(#ffffff14 1px,transparent 1px);background-size:16px 16px}
 #wrap{position:relative;margin:auto;line-height:0;box-shadow:0 0 0 1px #6b7385,0 0 40px #000}
@@ -37,13 +38,14 @@ h3{margin:0 0 6px;font:18px 'Bebas Neue',sans-serif;letter-spacing:2px;backgroun
 #dl>div{background:var(--p);border:1px solid #6b7385;padding:16px;width:100%;max-width:380px;max-height:90dvh;overflow:auto}#dl button{margin-top:12px;width:100%}
 #st{position:fixed;top:6px;right:10px;font-size:11px;color:var(--a);z-index:5;pointer-events:none}
 @media(max-width:800px){
-#ed{grid-template-columns:1fr;grid-template-rows:1fr 58px}
-#tools{flex-direction:row;order:2;border:0;border-top:1px solid var(--l);padding:7px}#tools button{flex:0 0 auto}
-#side{position:fixed;left:0;right:0;bottom:58px;max-height:48dvh;border-top:1px solid var(--a);transform:translateY(110%);transition:transform .2s;z-index:4}#side.open{transform:none}
+#ed{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) 58px}
+#main{grid-column:1;grid-row:1}#tools{grid-column:1;grid-row:2}
+#tools{flex-direction:row;border:0;border-top:1px solid var(--l);padding:7px}#tools button{flex:0 0 auto}
+#side{position:fixed;left:0;right:0;bottom:58px;max-height:calc(var(--h,100dvh)*.45);border-top:1px solid var(--a);transform:translateY(110%);visibility:hidden;transition:transform .2s,visibility .2s;z-index:4}#side.open{transform:none;visibility:visible}
 #home header .logo{font-size:34px}}
 </style></head><body>
 <div id="st"></div>
-<section id="home"><header><h1 class="logo">PORTLAB</h1><button id="bn">＋ Nuevo</button><button id="bi">Importar respaldo</button><button id="be">Exportar respaldo</button></header><div id="grid"></div></section>
+<section id="home"><header><h1 class="logo">PORTLAB</h1><button id="bd">⬇ Descargar app</button><button id="bn">＋ Nuevo</button><button id="bi">Importar respaldo</button><button id="be">Exportar respaldo</button></header><div id="grid"></div></section>
 <section id="ed" hidden>
 <main id="main"><div id="wrap"><canvas id="c"></canvas><div id="gr" hidden></div></div></main>
 <aside id="side"><div id="pp"></div><h3 style="margin-top:16px">Capas</h3><div id="ly"></div></aside>
@@ -190,5 +192,10 @@ C.requestRenderAll();if(a!='sel'){snap()}pp();L()};
 function xp(){const{w,h}=PJ;M(`<h3>Exportar</h3><label>Formato</label><select id=xf><option>png<option>jpg</select><label>Calidad (JPG)</label><input id=xq type=range min=50 max=100 value=92><label>Tamaño</label><select id=xs><option value=1>100% · ${w}×${h}<option value=.75>75% · ${Math.round(w*.75)}×${Math.round(h*.75)}<option value=.5>50% · ${Math.round(w*.5)}×${Math.round(h*.5)}<option value=.25>25% · ${Math.round(w*.25)}×${Math.round(h*.25)}</select><button id=xg>Descargar</button><small style="color:#8e96aa;display:block;margin-top:8px">Si el celular falla con tamaños grandes, elegí un tamaño menor.</small>`);
 $('#xg').onclick=()=>{C.discardActiveObject();C.requestRenderAll();const m=+$('#xs').value,j=$('#xf').value=='jpg';
 try{const el=C.toCanvasElement(m/z);el.toBlob(b=>{if(!b)return alert('No se pudo exportar. Probá un tamaño menor.');const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=PJ.name+(j?'.jpg':'.png');a.click();setTimeout(()=>URL.revokeObjectURL(a.href),9000);$('#dl').hidden=1},j?'image/jpeg':'image/png',$('#xq').value/100)}catch(x){alert('Error al exportar: '+x.message+'. Probá un tamaño menor.')}}}
+const sv=()=>document.documentElement.style.setProperty('--h',innerHeight+'px');sv();addEventListener('resize',sv);
+let dp;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e});
+if(matchMedia('(display-mode: standalone)').matches)$('#bd').hidden=1;
+$('#bd').onclick=async()=>{if(dp){dp.prompt();await dp.userChoice;dp=null}else M(`<h3>Instalar PortLab</h3><p>Tu navegador no mostró el aviso automático. Instalala a mano:</p><p><b>Brave / Chrome (Android):</b> menú ⋮ → “Instalar aplicación” o “Agregar a pantalla principal”.</p><p><b>PC:</b> ícono de instalar en la barra de direcciones, o menú ⋮ → “Instalar PortLab”.</p><p><b>iPhone (Safari):</b> Compartir → “Añadir a pantalla de inicio”.</p><button onclick="$('#dl').hidden=1">Entendido</button>`)};
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>0);
 home();
 </script></body></html>
