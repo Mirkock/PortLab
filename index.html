@@ -431,6 +431,14 @@ return sec('Relleno con imagen (ventana)',sl('Imagen dentro de las letras','wi',
 +sec('Efecto sobre lo de atrás (vidrio)',sl('Efecto','bd',[['0','Ninguno'],['blur','Vidrio esmerilado'],['invert','Invertir colores'],['gray','Blanco y negro'],['pixel','Pixelar'],['aberr','Aberración cromática'],['zoom','Lupa']],o.bd||'0','0')+rg('Intensidad','bdv',5,100,1,o.bdv||50,50))}
 Object.assign(HELP,{wi:'Las letras muestran esta foto, tal como está ubicada detrás. Ocultá la capa de la foto (ojo) para que solo se vea dentro de las letras.',ws:'Agranda o achica la imagen dentro de las letras.',wx:'Desplaza la imagen horizontalmente dentro de las letras.',wy:'Desplaza la imagen verticalmente dentro de las letras.',bd:'Las letras funcionan como un vidrio: lo que se ve a través de ellas cambia. Afecta a todo lo que está dibujado en esa zona.',bdv:'Qué tan fuerte es el efecto de vidrio.'});
 
+/* ---------- tamaño del lienzo y guardado ---------- */
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&DT&&PJ&&C&&!$('#ed').hidden)flush()});
+function rsM(){M(`<h3>Tamaño del lienzo</h3><small class=hp>Tamaño actual: ${PJ.w}×${PJ.h} px</small><label>Formato</label><select id=rf>${FM.map(f=>`<option value="${f[1]},${f[2]}">${f[0]} ${f[1]}×${f[2]}`).join('')}<option value=c selected>Personalizado</option></select><div class=r><input id=rw type=number value=${PJ.w}><input id=rh type=number value=${PJ.h}></div><label>Qué hacer con lo que ya hay</label><select id=rm><option value=s>Escalar y centrar (todo entra proporcionalmente)</option><option value=k>Mantener tamaños y centrar (puede sobrar o faltar espacio)</option><option value=x>Mantener posiciones exactas</option></select><button id=rok>Aplicar</button><small class=hp>Se puede deshacer.</small>`);
+$('#rf').onchange=e=>{if(e.target.value!='c'){const q=e.target.value.split(',');$('#rw').value=q[0];$('#rh').value=q[1]}};
+$('#rok').onclick=()=>{const k=x=>Math.max(100,Math.min(8000,Math.round(+x)||1000)),w=k($('#rw').value),h=k($('#rh').value),m=$('#rm').value,ow=PJ.w,oh=PJ.h,f=m=='s'?Math.min(w/ow,h/oh):1;
+C.discardActiveObject();C.getObjects().forEach(o=>{const c=o.getCenterPoint();let nx=c.x,ny=c.y;if(m!='x'){nx=(c.x-ow/2)*f+w/2;ny=(c.y-oh/2)*f+h/2}if(f!=1){o.scaleX*=f;o.scaleY*=f}o.setPositionByOrigin(new fabric.Point(nx,ny),'center','center');o.setCoords()});
+PJ.w=w;PJ.h=h;fit();snap();pp()}}
+
 const sv=()=>document.documentElement.style.setProperty('--h',innerHeight+'px');sv();addEventListener('resize',sv);
 let dp;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e});
 if(matchMedia('(display-mode: standalone)').matches)$('#bd').hidden=1;
