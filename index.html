@@ -51,6 +51,13 @@ summary{cursor:pointer;padding:10px 0;font:17px 'Bebas Neue',sans-serif;letter-s
 .r{flex-wrap:wrap}.r>button{flex:1 1 45%;font-size:12px}
 #gvx,#gvy{position:absolute;pointer-events:none;background:#ff2bd6;z-index:3}#gvx{top:0;bottom:0;width:1px}#gvy{left:0;right:0;height:1px}
 @media(max-width:800px){#tools button{min-width:68px}}
+
+.ly{flex-wrap:wrap;padding:4px 4px 4px 8px}.ly span{flex:1 1 100%;white-space:normal}.ly small{display:block;color:#8e96aa;font-size:10px}
+.ly button{flex:1 1 auto;min-width:40px;min-height:40px;display:flex;flex-direction:column;align-items:center;line-height:1;font-size:15px;padding:2px}.ly button i{font-style:normal}.ly em{font-style:normal;font-size:9px;margin-top:2px}.nohelp .ly em{display:none}
+#crwo{padding:14px;overflow:hidden;margin-top:8px}#crw{position:relative;margin:auto;touch-action:none;user-select:none}#crc{display:block}
+#crb{position:absolute;border:2px solid #d4ff00;box-shadow:0 0 0 2000px #000a;cursor:move}#crb i{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;background:#d4ff00;border-radius:50%}
+#crb i[data-h=nw]{left:0;top:0}#crb i[data-h=ne]{left:100%;top:0}#crb i[data-h=sw]{left:0;top:100%}#crb i[data-h=se]{left:100%;top:100%}#crb i[data-h=n]{left:50%;top:0}#crb i[data-h=s]{left:50%;top:100%}#crb i[data-h=w]{left:0;top:50%}#crb i[data-h=e]{left:100%;top:50%}
+canvas{-webkit-touch-callout:none;user-select:none}
 </style></head><body>
 <div id="st"></div>
 <section id="home"><header><h1 class="logo">PORTLAB</h1><button id="bd">⬇ Descargar app</button><button id="bn">＋ Nuevo</button><button id="bi">Importar respaldo</button><button id="be">Exportar respaldo</button></header><div id="grid"></div></section>
@@ -82,7 +89,7 @@ const $=s=>document.querySelector(s);
 if(!window.fabric)alert('No cargó Fabric.js (¿sin internet?). Reabrí con conexión.');
 const FONTS=['Anton','Bebas Neue','Syne','Bungee','Monoton','Rubik Glitch','UnifrakturCook','Press Start 2P','Arial','Georgia','Courier New'];
 const FM=[['Portada cuadrada',3000,3000],['Miniatura YouTube',1280,720],['Portada vertical',1080,1350],['Historia Instagram',1080,1920]];
-const PR=['bgo','_k','name','col','sc','sw','fx','fxv','_f','_s','lockMovementX','lockMovementY','lockRotation','lockScalingX','lockScalingY','hasControls'];
+const PR=['thru','bgo','_k','name','col','sc','sw','fx','fxv','_f','_s','lockMovementX','lockMovementY','lockRotation','lockScalingX','lockScalingY','hasControls'];
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 /* ---------- IndexedDB ---------- */
 const db=new Promise((r,j)=>{const q=indexedDB.open('portlab',1);q.onupgradeneeded=()=>q.result.createObjectStore('p',{keyPath:'id'});q.onsuccess=()=>r(q.result);q.onerror=j});
@@ -129,7 +136,7 @@ async function flush(){clearTimeout(tm);if(!PJ||!C)return;PJ.json=C.toJSON(PR);P
 function touch(){let g;const dd=e=>Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY),
 aa=e=>Math.atan2(e.touches[1].clientY-e.touches[0].clientY,e.touches[1].clientX-e.touches[0].clientX)*180/Math.PI,w=C.wrapperEl;
 w.addEventListener('touchstart',e=>{if(e.touches.length==2){const o=C.getActiveObject();g={o:o&&!o.lockMovementX?o:null,d:dd(e),a:aa(e),z,s:o&&o.scaleX,r:o&&o.angle};e.stopPropagation()}},{capture:true,passive:false});
-w.addEventListener('touchmove',e=>{if(g&&e.touches.length==2){e.preventDefault();e.stopPropagation();if(g.o){g.o.scale(g.s*dd(e)/g.d);g.o.rotate(g.r+aa(e)-g.a);g.o.setCoords();C.requestRenderAll()}else zoom(g.z*dd(e)/g.d)}},{capture:true,passive:false});
+w.addEventListener('touchmove',e=>{if(g&&e.touches.length==2){e.preventDefault();e.stopPropagation();if(g.o){g.o.scale(g.s*dd(e)/g.d);g.o.rotate(sa(g.r+aa(e)-g.a));g.o.setCoords();C.requestRenderAll()}else zoom(g.z*dd(e)/g.d)}},{capture:true,passive:false});
 w.addEventListener('touchend',e=>{if(g&&e.touches.length<2){if(g.o)snap();g=null}},true)}
 /* ---------- acciones ---------- */
 $('#tools').onclick=async e=>{const t=e.target.closest('button')?.dataset.t;if(!t)return;
@@ -142,7 +149,7 @@ if(t=='grid'){$('#gr').hidden=!$('#gr').hidden;e.target.closest("button").classL
 if(t=='sv'){await flush()}
 if(t=='var'){await flush();const n={...PJ,id:uid(),name:PJ.name+' · var',t:Date.now()};await put(n);open(n)}
 if(t=='tx')txm();
-if(t=='sn'){SN=!SN;e.target.closest('button').classList.toggle('on',SN);gd()}
+if(t=='sn'){SN=!SN;snapRot();e.target.closest('button').classList.toggle('on',SN);gd()}
 if(t=='hp'){HP=!HP;try{localStorage.pl_help=HP?1:0}catch(x){}hp()}
 if(t=='xp')xp();
 if(t=='pn'){$('#side').classList.toggle('open');e.target.closest("button").classList.toggle('on')}};
@@ -186,9 +193,9 @@ const hx=(r,g,b)=>'#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join(''),rg
 function pp(){const o=C.getActiveObject(),s=$('#pp');
 if(!o){s.innerHTML='<h3>Lienzo</h3>'+col('Color de fondo','bg',C.backgroundColor||'#000000','#0d0d12')+'<small class=hp>Tocá un elemento para editarlo, o agregá uno con Imagen, Texto o Textura en la barra de herramientas.</small>';return}
 const f=o._f||{},sh=o._s||{},k=o._k=o._k||{c:'#ffffff',t:25,f:10,m:'edge'},T=o.type=='textbox',I=o.type=='image';
-let h=`<h3>${o.name||o.type}</h3>`+sec('Posición y forma',rg('Opacidad','op',0,100,1,Math.round(o.opacity*100),100)+rg('Rotación (grados)','an',0,360,1,Math.round(((o.angle%360)+360)%360),0)
+let h=`<h3>${o.name||o.type}</h3>`+sec('Posición y forma',coords(o)+rg('Opacidad','op',0,100,1,Math.round(o.opacity*100),100)+rg('Rotación (grados)','an',0,360,1,Math.round(((o.angle%360)+360)%360),0)
 +'<div class=r><button data-a=ctr>Centrar en el lienzo</button><button data-a=fh>Voltear horizontal</button><button data-a=fv>Voltear vertical</button><button data-a=dup>Duplicar</button><button data-a=del>Eliminar</button></div>'
-+(I?'<div class=r><button data-a=rz>Restablecer tamaño y posición</button><button data-a=fl>Ajustar al lienzo (entra completa)</button><button data-a=cv>Cubrir lienzo (sin bordes vacíos)</button></div>':''),1)
++(I?'<div class=r><button data-a=crop>Recortar imagen</button><button data-a=rz>Restablecer tamaño y posición</button><button data-a=fl>Ajustar al lienzo (entra completa)</button><button data-a=cv>Cubrir lienzo (sin bordes vacíos)</button></div>':''),1)
 +sec('Fusión con lo de atrás',sl('Modo de fusión','bm',BM,o.globalCompositeOperation||'source-over','source-over'));
 if(T)h+=sec('Texto',`<div class=ct><label>Contenido</label><textarea data-k=tx rows=2>${o.text.replace(/</g,'&lt;')}</textarea></div>`+sl('Tipografía','ft',FONTS.map(x=>[x,x]),o.fontFamily,'Anton')+'<div class=r><button data-a=ff>Importar fuente (.ttf .otf .woff2)</button></div>'
 +rg('Tamaño','sz',10,Math.round(PJ.w/2),1,Math.round(o.fontSize),Math.round(PJ.w*.08))+col('Color','col',o.col||'#ffffff','#ffffff')+rg('Espaciado entre letras','sp',-100,800,10,o.charSpacing||0,0)+rg('Altura de línea','lh',.6,2.5,.05,o.lineHeight,1.16)
@@ -205,16 +212,16 @@ function filt(o){const f=o._f||(o._f={}),F=fabric.Image.filters,a=[];
 if(f.br)a.push(new F.Brightness({brightness:f.br/100}));if(f.co)a.push(new F.Contrast({contrast:f.co/100}));if(f.sa)a.push(new F.Saturation({saturation:f.sa/100}));
 if(f.te){const t=f.te/100*.25;a.push(new F.ColorMatrix({matrix:[1,0,0,0,t,0,1,0,0,0,0,0,1,0,-t,0,0,0,1,0]}))}
 if(f.gr)a.push(new F.Grayscale());if(f.bl)a.push(new F.Blur({blur:f.bl/100*.2}));o.filters=a;o.applyFilters()}
-function setp(el){const k=el.dataset.k,v=el.value;if(!k)return;
+function setp(el){const k=el.dataset.k,v=el.value;if(!k||(el.type=='number'&&v===''))return;
 if(k=='bg'){C.backgroundColor=v;C.requestRenderAll();return}
 const o=C.getActiveObject();if(!o)return;o._f=o._f||{};o._s=o._s||{};o._k=o._k||{c:'#ffffff',t:25,f:10,m:'edge'};
 const ff=()=>{o._f[k]=+v;filt(o)};
-const m={op:()=>o.set('opacity',v/100),an:()=>{o.rotate(+v);o.setCoords()},bm:()=>o.set('globalCompositeOperation',v),tx:()=>{o.set('text',v);refx(o)},ft:()=>font(o,v),sz:()=>{o.set('fontSize',+v);refx(o)},col:()=>{o.col=v;refx(o)},
+const m={op:()=>o.set('opacity',v/100),an:()=>{let a=+v;if(SN){const n=Math.round(a/90)*90;if(Math.abs(a-n)<5){a=n;el.value=n}}o.rotate(a%360);o.setCoords()},bm:()=>o.set('globalCompositeOperation',v),tx:()=>{o.set('text',v);refx(o)},ft:()=>font(o,v),sz:()=>{o.set('fontSize',+v);refx(o)},col:()=>{o.col=v;refx(o)},
 sp:()=>o.set('charSpacing',+v),lh:()=>o.set('lineHeight',+v),al:()=>o.set('textAlign',v),sc:()=>{o.sc=v;refx(o)},sw:()=>{o.sw=+v;refx(o)},
 fx:()=>{if(v=='pixel'||v=='gothic'){font(o,v=='pixel'?'Press Start 2P':'UnifrakturCook');fx(o,'normal')}else fx(o,v)},fv:()=>fx(o,o.fx||'normal',v),
 br:ff,co:ff,sa:ff,te:ff,bl:ff,gr:()=>{o._f.gr=v=='1';filt(o)},
 sb:()=>{o._s.b=+v;shi(o)},sc2:()=>{o._s.c=v;shi(o)},bw:()=>o.set('strokeWidth',+v),bc:()=>o.set('stroke',v),
-kc:()=>o._k.c=v,kt:()=>o._k.t=+v,kf:()=>o._k.f=+v,km:()=>o._k.m=v};
+px:()=>{const q=o.getPointByOrigin('left','top');o.setPositionByOrigin(new fabric.Point(+v,q.y),'left','top');o.setCoords()},py:()=>{const q=o.getPointByOrigin('left','top');o.setPositionByOrigin(new fabric.Point(q.x,+v),'left','top');o.setCoords()},pw:()=>sz(o,+v,0),ph:()=>sz(o,0,+v),kc:()=>o._k.c=v,kt:()=>o._k.t=+v,kf:()=>o._k.f=+v,km:()=>o._k.m=v};
 m[k]&&m[k]();C.requestRenderAll()}
 function shi(o){const s=o._s;o.shadow=s.b?new fabric.Shadow({color:s.c||'#000',blur:s.b*2,offsetX:s.b/2,offsetY:s.b/2}):null}
 $('#side').addEventListener('input',e=>setp(e.target));
@@ -228,18 +235,24 @@ if(a=='rz')fitI(o,'r');if(a=='fl')fitI(o,'f');if(a=='cv')fitI(o,'c');
 if(a=='rsf'){o._f={};filt(o);pp()}
 if(a=='pick'){pickC(o);return}if(a=='keyap'){keyBg(o);return}if(a=='keyrs'){keyRs(o);return}
 if(a=='ff'){$('#ff').click();return}
+if(a=='crop'){cropUI(o);return}if(a=='lkp'){LK=!LK;pp();return}
+if(a=='eq'){const q=C.getObjects().map((x,i)=>[x,i]).filter(t=>t[0]!==o).reverse();M('<h3>Igualar a otra capa</h3><small class=hp>Esta capa copia la posición, el tamaño y la rotación de la capa que elijas.</small>'+q.map(t=>`<button data-eq="${t[1]}">${esc(t[0].name||t[0].type)}</button>`).join('')+'<button>Cancelar</button>');return}
 if(a=='dup')dupo(o);if(a=='del'){C.remove(o);C.discardActiveObject()}C.requestRenderAll();snap()});
 function dupo(o){o.clone(c=>{c.set({left:o.left+30,top:o.top+30,name:(o.name||'')+' copia'});C.add(c);C.setActiveObject(c)},PR)}
 /* ---------- capas ---------- */
-function L(){if(!C)return;const a=C.getActiveObject();$('#ly').innerHTML=C.getObjects().map((o,i)=>`<div class="ly${o==a?' sel':''}" data-i=${i}><span data-a=sel>${(o.name||o.type).replace(/</g,'&lt;')}</span><button data-a=vis>${o.visible?'◉':'○'}</button><button data-a=lk>${o.lockMovementX?'🔒':'🔓'}</button><button data-a=up>▲</button><button data-a=dn>▼</button><button data-a=ren>✎</button><button data-a=dup>⎘</button><button data-a=del>✕</button></div>`).reverse().join('')}
+function L(){if(!C)return;const a=C.getActiveObject(),B=(c,t,i,l)=>`<button data-a=${c} title="${t}"><i>${i}</i><em>${l}</em></button>`;
+$('#ly').innerHTML=C.getObjects().map((o,i)=>{const q=o.getPointByOrigin('left','top');return `<div class="ly${o==a?' sel':''}" data-i=${i}><span data-a=sel>${esc(o.name||o.type)}<small>X ${Math.round(q.x)} · Y ${Math.round(q.y)} · ${Math.round(o.getScaledWidth())}×${Math.round(o.getScaledHeight())}</small></span>`
++B('edit','Seleccionar esta capa y abrir sus propiedades','◎','Editar')+B('thru','Atravesar: los toques en el lienzo pasan de largo y no seleccionan esta capa','⇩'+(o.thru?'✓':''),'Atravesar')+B('vis','Mostrar u ocultar esta capa',o.visible?'◉':'○','Ver')+B('lk','Bloquear o desbloquear',o.lockMovementX?'🔒':'🔓','Bloquear')+B('up','Subir una posición','▲','Subir')+B('dn','Bajar una posición','▼','Bajar')+B('ren','Cambiar el nombre','✎','Nombre')+B('dup','Duplicar','⎘','Duplicar')+B('del','Eliminar','✕','Borrar')+'</div>'}).reverse().join('')}
 $('#ly').onclick=e=>{const a=e.target.dataset.a,r=e.target.closest('.ly');if(!a||!r)return;const o=C.item(+r.dataset.i);if(!o)return;
 if(a=='sel'&&o.visible)C.setActiveObject(o);
+if(a=='edit'){C.setActiveObject(o);$('#side').classList.add('open');$('#tp').classList.add('on');$('#side').scrollTop=0}
+if(a=='thru'){o.thru=!o.thru;o.evented=!o.thru}
 if(a=='vis'){o.visible=!o.visible;if(!o.visible&&C.getActiveObject()==o)C.discardActiveObject()}
 if(a=='lk'){const b=!o.lockMovementX;o.set({lockMovementX:b,lockMovementY:b,lockRotation:b,lockScalingX:b,lockScalingY:b,hasControls:!b})}
 if(a=='up')C.bringForward(o);if(a=='dn')C.sendBackwards(o);
 if(a=='ren'){const n=prompt('Nombre de la capa',o.name||'');if(n)o.name=n}
 if(a=='dup')dupo(o);if(a=='del'){C.remove(o);C.discardActiveObject()}
-C.requestRenderAll();if(a!='sel'){snap()}pp();L()};
+C.requestRenderAll();if(a!='sel'&&a!='edit'){snap()}pp();L()};
 /* ---------- exportar ---------- */
 function xp(){const{w,h}=PJ;M(`<h3>Exportar</h3><label>Formato</label><select id=xf><option>png<option>jpg</select><label>Calidad (JPG)</label><input id=xq type=range min=50 max=100 value=92><label>Tamaño</label><select id=xs><option value=1>100% · ${w}×${h}<option value=.75>75% · ${Math.round(w*.75)}×${Math.round(h*.75)}<option value=.5>50% · ${Math.round(w*.5)}×${Math.round(h*.5)}<option value=.25>25% · ${Math.round(w*.25)}×${Math.round(h*.25)}</select><button id=xg>Descargar</button><small style="color:#8e96aa;display:block;margin-top:8px">Si el celular falla con tamaños grandes, elegí un tamaño menor.</small>`);
 $('#xg').onclick=()=>{C.discardActiveObject();C.requestRenderAll();const m=+$('#xs').value,j=$('#xf').value=='jpg';
@@ -249,7 +262,7 @@ let HP=1,SN=true;try{HP=localStorage.pl_help!='0'}catch(e){}
 function hp(){document.body.classList.toggle('nohelp',!HP)}hp();
 /* ---------- imán y guías ---------- */
 function gd(x,y){const a=$('#gvx'),b=$('#gvy');a.hidden=x==null;b.hidden=y==null;if(x!=null)a.style.left=x*z+'px';if(y!=null)b.style.top=y*z+'px'}
-function snapInit(){
+function snapInit(){snapRot();pickInit();['object:moving','object:scaling','object:rotating','object:modified'].forEach(n=>C.on(n,upd));C.on('object:added',e=>{e.target.evented=!e.target.thru});C.wrapperEl.addEventListener('contextmenu',e=>e.preventDefault());
 C.on('object:moving',e=>{if(!SN)return;const o=e.target,t=(innerWidth<800?16:10)/z,b=o.getBoundingRect(true,true);let gx=null,gy=null,bx=t,by=t,dx=0,dy=0;
 for(const v of[b.left,b.left+b.width/2,b.left+b.width])for(const T of[0,PJ.w/2,PJ.w]){const d=T-v;if(Math.abs(d)<bx){bx=Math.abs(d);dx=d;gx=T}}
 for(const v of[b.top,b.top+b.height/2,b.top+b.height])for(const T of[0,PJ.h/2,PJ.h]){const d=T-v;if(Math.abs(d)<by){by=Math.abs(d);dy=d;gy=T}}
@@ -274,8 +287,8 @@ else{const m=new Uint8Array(w*h),st=[],lim=thr+sf/2,p=q=>{if(!m[q]&&dist(q*4)<=l
 for(let i=0;i<w;i++){p(i);p((h-1)*w+i)}for(let j=0;j<h;j++){p(j*w);p(j*w+w-1)}
 while(st.length){const q=st.pop(),px=q%w;if(px>0)p(q-1);if(px<w-1)p(q+1);if(q>=w)p(q-w);if(q<w*(h-1))p(q+w)}
 for(let i=0;i<m.length;i++)if(m[i])D[i*4+3]=0}
-x.putImageData(d,0,0);o.setElement(c);if(o.filters&&o.filters.length)o.applyFilters();o.dirty=true;C.requestRenderAll();snap()};im.src=o.bgo}
-function keyRs(o){if(!o.bgo)return;const im=new Image();im.onload=()=>{o.setElement(im);if(o.filters&&o.filters.length)o.applyFilters();o.dirty=true;C.requestRenderAll();snap()};im.src=o.bgo}
+x.putImageData(d,0,0);o.setElement(c,{width:o.width,height:o.height});if(o.filters&&o.filters.length)o.applyFilters();o.dirty=true;C.requestRenderAll();snap()};im.src=o.bgo}
+function keyRs(o){if(!o.bgo)return;const im=new Image();im.onload=()=>{o.setElement(im,{width:o.width,height:o.height});if(o.filters&&o.filters.length)o.applyFilters();o.dirty=true;C.requestRenderAll();snap()};im.src=o.bgo}
 /* ---------- fuentes importadas ---------- */
 async function loadF(n,d){const f=new FontFace(n,d);await f.load();document.fonts.add(f);if(!FONTS.includes(n))FONTS.push(n)}
 all().then(a=>a.filter(p=>p.font).forEach(p=>loadF(p.name,p.data).catch(()=>0)));
@@ -297,9 +310,51 @@ const TX={
 'VHS':[(x,s)=>{x.fillStyle='rgba(0,0,0,.35)';for(let y=0;y<s;y+=4)x.fillRect(0,y,s,1);for(let i=0;i<8;i++){x.fillStyle='rgba(255,255,255,.12)';x.fillRect(0,rnd()*s,s,4+rnd()*30)}x.fillStyle='rgba(255,0,80,.07)';x.fillRect(6,0,s,s)},'normal',.8],
 'Distorsión':[(x,s)=>{x.strokeStyle='rgba(255,255,255,.4)';x.lineWidth=3;for(let y=0;y<s;y+=14){x.beginPath();x.moveTo(0,y);for(let q=0;q<=s;q+=8)x.lineTo(q,y+Math.sin(q/40+y/20)*12*(1+Math.sin(y/90)));x.stroke()}},'screen',.6]};
 function txm(){M('<h3>Texturas</h3><small class=hp>Se agregan como una capa nueva que cubre el lienzo. Después podés moverla, escalarla, rotarla, cambiar su opacidad y su modo de fusión.</small>'+Object.keys(TX).map(n=>`<button data-tx="${n}">${n}</button>`).join('')+'<button>Cerrar</button>')}
-$('#dl').addEventListener('click',e=>{const n=e.target.dataset.tx;if(n){addTx(n);$('#dl').hidden=1}else if(e.target.tagName=='BUTTON')$('#dl').hidden=1});
+$('#dl').addEventListener('click',e=>{const d=e.target.dataset,o=C&&C.getActiveObject();
+if(d.tx)addTx(d.tx);
+if(d.ls!=null)C.setActiveObject(C.item(+d.ls));
+if(d.eq!=null&&o){const t=C.item(+d.eq),q=t.getPointByOrigin('left','top');o.set({angle:t.angle});
+if(o.type=='textbox')o.set('width',t.getScaledWidth());else o.set({scaleX:o.scaleX*t.getScaledWidth()/o.getScaledWidth(),scaleY:o.scaleY*t.getScaledHeight()/o.getScaledHeight()});
+o.setPositionByOrigin(q,'left','top');o.setCoords();C.requestRenderAll();snap();pp()}
+if(e.target.tagName=='BUTTON')$('#dl').hidden=1});
 function addTx(n){const[f,bm,op]=TX[n],c=document.createElement('canvas');c.width=c.height=1024;f(c.getContext('2d'),1024);
-fabric.Image.fromURL(c.toDataURL('image/png'),o=>{o.set({originX:'center',originY:'center',left:PJ.w/2,top:PJ.h/2,name:'Textura '+n,globalCompositeOperation:bm,opacity:op,_f:{},_s:{}});o.scale(Math.max(PJ.w,PJ.h)/1024);C.add(o);C.setActiveObject(o)})}
+fabric.Image.fromURL(c.toDataURL('image/png'),o=>{o.set({originX:'center',originY:'center',left:PJ.w/2,top:PJ.h/2,name:'Textura '+n,globalCompositeOperation:bm,opacity:op,thru:true,evented:false,_f:{},_s:{}});o.scale(Math.max(PJ.w,PJ.h)/1024);C.add(o);C.setActiveObject(o)})}
+
+/* ---------- selección de capas, rotación, coordenadas, recorte ---------- */
+let LK=true;const esc=t=>String(t).replace(/</g,'&lt;');
+function snapRot(){const P=fabric.Object.prototype;P.snapAngle=SN?90:0;P.snapThreshold=7}
+function sa(a){if(!SN)return a;const n=Math.round(a/90)*90;return Math.abs(a-n)<6?n:a}
+const num=(l,k,v,d)=>`<div class=ct><label>${l}</label><input type=number data-k=${k} value="${Math.round(v*10)/10}"${d?' disabled':''}></div>`;
+function coords(o){const q=o.getPointByOrigin('left','top'),T=o.type=='textbox';return `<div class=r>${num('X (px)','px',q.x)}${num('Y (px)','py',q.y)}</div><div class=r>${num('Ancho (px)','pw',o.getScaledWidth())}${num('Alto (px)','ph',o.getScaledHeight(),T)}</div><div class=r><button data-a=lkp>Proporción: ${LK?'bloqueada':'libre'}</button><button data-a=eq>Igualar a otra capa</button></div><small class=hp>Posición y tamaño en píxeles del lienzo (${PJ.w}×${PJ.h}), desde la esquina superior izquierda. Escribí un número para mover o cambiar el tamaño.${o.thru?' Esta capa está en “Atravesar”: se mueve con las manijas, con X e Y, o desde el panel de capas.':''}</small>`}
+function sz(o,w,h){if(!(w>=1||h>=1))return;const q=o.getPointByOrigin('left','top');
+if(o.type=='textbox'){if(w)o.set('width',Math.max(10,w))}else{let fx=w?w/o.getScaledWidth():0,fy=h?h/o.getScaledHeight():0;if(LK){fx=fx||fy;fy=fy||fx}if(fx)o.scaleX*=fx;if(fy)o.scaleY*=fy}
+o.setPositionByOrigin(q,'left','top');o.setCoords()}
+function upd(){const o=C.getActiveObject();if(!o||!$('#pp [data-k=px]'))return;const q=o.getPointByOrigin('left','top'),S=(k,v)=>{const i=$('#pp [data-k='+k+']');if(i&&document.activeElement!==i)i.value=Math.round(v*10)/10};
+S('px',q.x);S('py',q.y);S('pw',o.getScaledWidth());S('ph',o.getScaledHeight());S('an',((o.angle%360)+360)%360)}
+function pickInit(){let dn=null,lp=0,last=null,cyc=null;const clr=()=>clearTimeout(lp),stack=p=>C.getObjects().filter(o=>o.visible&&o.containsPoint(p,null,true)).reverse();
+C.on('mouse:down',e=>{clr();const p=e.absolutePointer;dn={x:p.x,y:p.y,a:C.getActiveObject()};
+lp=setTimeout(()=>{const s=stack(p);if(s.length>1&&dn&&!dn.moved){dn=null;M('<h3>Capas en este punto</h3><small class=hp>Elegí cuál querés editar.</small>'+s.map(o=>`<button data-ls="${C.getObjects().indexOf(o)}">${esc(o.name||o.type)}</button>`).join('')+'<button>Cancelar</button>')}},600)});
+C.on('mouse:move',e=>{if(dn&&Math.hypot(e.absolutePointer.x-dn.x,e.absolutePointer.y-dn.y)>6/z){clr();dn.moved=1}});
+C.on('mouse:up',e=>{clr();if(!dn||dn.moved){dn=null;return}const p=e.absolutePointer,a=dn.a;dn=null;
+const near=last&&Date.now()-last.t<800&&Math.hypot(p.x-last.x,p.y-last.y)<12/z,s=stack(p);
+if(near&&s.length>1&&(cyc||(a&&a.type!='textbox'&&s.includes(a)))){const i=((cyc?cyc.i:s.indexOf(a))+1)%s.length;cyc={i};C.setActiveObject(s[i]);C.requestRenderAll()}else cyc=null;
+last={x:p.x,y:p.y,t:Date.now()}})}
+function setCrop(o,cx,cy,cw,ch){cx=Math.round(cx);cy=Math.round(cy);cw=Math.round(cw);ch=Math.round(ch);const tl=o.getPointByOrigin('left','top'),v=fabric.util.rotateVector({x:(cx-o.cropX)*o.scaleX,y:(cy-o.cropY)*o.scaleY},fabric.util.degreesToRadians(o.angle));
+o.set({cropX:cx,cropY:cy,width:cw,height:ch});o.setPositionByOrigin(new fabric.Point(tl.x+v.x,tl.y+v.y),'left','top');o.setCoords();C.requestRenderAll();snap();pp()}
+function cropUI(o){if(o.flipX||o.flipY)return alert('Desactivá el volteo antes de recortar (tocá Voltear otra vez).');
+const el=o._originalElement,EW=el.naturalWidth||el.width,EH=el.naturalHeight||el.height,k=Math.min(300/EW,280/EH),W=Math.round(EW*k),H=Math.round(EH*k);
+let r={x:o.cropX*k,y:o.cropY*k,w:o.width*k,h:o.height*k},R=null,d=null;
+M(`<h3>Recortar imagen</h3><small class=hp>Arrastrá las manijas para elegir qué parte queda. El original se conserva: “Quitar recorte” lo recupera.</small><div id=crwo><div id=crw style="width:${W}px;height:${H}px"><canvas id=crc width=${W} height=${H}></canvas><div id=crb>${['nw','n','ne','e','se','s','sw','w'].map(h=>`<i data-h=${h}></i>`).join('')}</div></div></div><select id=crr><option value=0>Proporción libre<option value=1>1:1 (cuadrada)<option value=.8>4:5 (vertical)<option value=1.7778>16:9 (horizontal)<option value=.5625>9:16 (historia)</select><button id=cro>Aplicar recorte</button><button id=crz>Quitar recorte</button><button>Cancelar</button>`);
+$('#crc').getContext('2d').drawImage(el,0,0,W,H);const b=$('#crb'),dr=()=>{b.style.left=r.x+'px';b.style.top=r.y+'px';b.style.width=r.w+'px';b.style.height=r.h+'px'};dr();
+b.onpointerdown=e=>{d={h:e.target.dataset.h||'m',x:e.clientX,y:e.clientY,r:{...r}};b.setPointerCapture(e.pointerId);e.preventDefault()};
+b.onpointermove=e=>{if(!d)return;const dx=e.clientX-d.x,dy=e.clientY-d.y,t=d.h,q=d.r;let{x,y,w,h}=q;
+if(t=='m'){x=Math.max(0,Math.min(W-w,x+dx));y=Math.max(0,Math.min(H-h,y+dy))}
+else{if(R&&t.length==1)return;if(t.includes('w')){x+=dx;w-=dx}if(t.includes('e'))w+=dx;if(t.includes('n')){y+=dy;h-=dy}if(t.includes('s'))h+=dy;if(R){h=w/R;if(t.includes('n'))y=q.y+q.h-h}
+if(x<-.5||y<-.5||x+w>W+.5||y+h>H+.5||w<24||h<24)return}
+r={x,y,w,h};dr()};
+b.onpointerup=()=>d=null;
+$('#crr').onchange=e=>{R=+e.target.value||null;if(R){const w=Math.min(W,H*R),h=w/R;r={x:(W-w)/2,y:(H-h)/2,w,h};dr()}};
+$('#cro').onclick=()=>setCrop(o,r.x/k,r.y/k,r.w/k,r.h/k);$('#crz').onclick=()=>setCrop(o,0,0,EW,EH)}
 
 const sv=()=>document.documentElement.style.setProperty('--h',innerHeight+'px');sv();addEventListener('resize',sv);
 let dp;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e});
