@@ -59,7 +59,8 @@ summary{cursor:pointer;padding:10px 0;font:17px 'Bebas Neue',sans-serif;letter-s
 #crb i[data-h=nw]{left:0;top:0}#crb i[data-h=ne]{left:100%;top:0}#crb i[data-h=sw]{left:0;top:100%}#crb i[data-h=se]{left:100%;top:100%}#crb i[data-h=n]{left:50%;top:0}#crb i[data-h=s]{left:50%;top:100%}#crb i[data-h=w]{left:0;top:50%}#crb i[data-h=e]{left:100%;top:50%}
 canvas{-webkit-touch-callout:none;user-select:none}
 #crwo{overflow:auto;max-height:52vh}#crs{position:absolute;left:0;top:0}#crb,#crb i{touch-action:none}
-#crg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}#dl #crg button{margin-top:0;min-height:62px;padding:4px;font-size:10px;line-height:1.1;display:flex;flex-direction:column;align-items:center;gap:2px}#crg svg{color:#e6eaf4}
+#crg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}#dl #wrap.tr{background:repeating-conic-gradient(#4a4a55 0 25%,#2c2c36 0 50%) 0 0/24px 24px}#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:72px;z-index:50;display:none;gap:8px;align-items:center;background:#000d;border:1px solid var(--l);padding:6px 10px;font-size:12px;max-width:92vw}#toast button{min-height:28px;padding:2px 8px;font-size:12px}#psv{position:absolute;left:0;top:0;overflow:visible;z-index:5;pointer-events:none}#psv [data-pi]{pointer-events:all}#ercur{position:absolute;display:none;pointer-events:none;border:1.5px solid #fff;mix-blend-mode:difference;border-radius:50%;z-index:4}.erk{display:flex;gap:6px;align-items:center;flex:1 1 100%;font-size:12px;margin:2px 0}.erk input{width:auto;min-height:0}
+#crg button{margin-top:0;min-height:62px;padding:4px;font-size:10px;line-height:1.1;display:flex;flex-direction:column;align-items:center;gap:2px}#crg svg{color:#e6eaf4}
 #crwo{position:sticky;top:0;z-index:2;background:var(--p)}
 #crm{min-height:16px;font-size:11px;color:#ff6b81;margin-top:4px}
 #cre{position:fixed;inset:0;z-index:30;background:#07070a;display:grid;grid-template-columns:minmax(0,1fr) 310px;grid-template-rows:auto minmax(0,1fr);grid-template-areas:"t t" "v c"}
@@ -112,28 +113,29 @@ button:active,button.on{color:var(--act)}summary{color:var(--b)}
 <div class="hs"><input id="q" placeholder="Buscar proyecto por nombre…"><select id="so"><option value="t">Orden: última modificación</option><option value="c">Orden: fecha de creación</option><option value="n">Orden: nombre</option></select></div><div id="grid"></div></section>
 <section id="ed" hidden>
 <div id="mtop"><button data-t="home" title="Volver a la lista de proyectos (se guarda solo)"><i>⌂</i></button><button data-t="un" title="Deshacer"><i>↶</i></button><button data-t="re" title="Rehacer"><i>↷</i></button><span id="st"></span><button data-t="sv" title="Guardar ahora"><i>💾</i></button><button data-t="xp" title="Exportar la imagen"><i>⬇</i></button><button data-t="fc" title="Modo enfoque: esconde los paneles"><i>⛶</i></button></div>
-<main id="main"><div id="wrap"><canvas id="c"></canvas><div id="gr" hidden></div><div id="gvx" hidden></div><div id="gvy" hidden></div></div></main>
+<main id="main"><div id="wrap"><canvas id="c"></canvas><div id="gr" hidden></div><div id="ercur"></div><div id="gvx" hidden></div><div id="gvy" hidden></div></div></main>
 <aside id="side"><div id="shh"><span></span><em id="shn">Sin selección</em></div><div id="pp"></div><h3 style="margin-top:16px">Capas</h3><div id="ly"></div></aside>
 <nav id="tools">
 <button data-t="home" title="Volver a la lista de proyectos (se guarda solo)"><i>⌂</i><span>Inicio</span></button>
 <button data-t="img" title="Subir una foto desde tu dispositivo"><i>▣</i><span>Imagen</span></button>
 <button data-t="txt" title="Agregar un texto nuevo"><i>Aa</i><span>Texto</span></button>
+<button data-t="er" title="Borrador: borra partes de una capa, de varias o de todas"><i>⌫</i><span>Borrador</span></button>
 <button data-t="tx" title="Agregar una textura: grano, metal, grunge, VHS..."><i>▒</i><span>Textura</span></button>
 <button data-t="un" title="Deshacer el último cambio"><i>↶</i><span>Deshacer</span></button>
 <button data-t="re" title="Rehacer lo que deshiciste"><i>↷</i><span>Rehacer</span></button>
 <button data-t="zo" title="Alejar la vista del lienzo"><i>−</i><span>Alejar</span></button>
 <button data-t="zi" title="Acercar la vista del lienzo"><i>＋</i><span>Acercar</span></button>
-<button data-t="fit" title="Mostrar el lienzo completo en pantalla"><i>⤢</i><span>Ver todo</span></button>
+<button data-t="fit" title="Ajusta el zoom para que se vea el lienzo completo (no esconde nada)"><i>⤢</i><span>Ajustar a pantalla</span></button>
 <button data-t="grid" title="Mostrar u ocultar la cuadrícula (no se exporta)"><i>#</i><span>Cuadrícula</span></button>
 <button data-t="sn" class="on" title="Imán: los elementos se pegan a los bordes y al centro del lienzo"><i>⌖</i><span>Imán</span></button>
 <button data-t="var" title="Crear una copia de este proyecto para probar otra versión sin perder esta"><i>⎘</i><span>Variación</span></button>
 <button data-t="sv" title="Guardar ahora (también se guarda solo)"><i>💾</i><span>Guardar</span></button>
 <button data-t="rs" title="Cambiar el tamaño del lienzo de este proyecto"><i>⤡</i><span>Tamaño</span></button>
 <button data-t="xp" title="Descargar la imagen final en PNG o JPG"><i>⬇</i><span>Exportar</span></button>
-<button data-t="fc" title="Esconder todos los paneles para ver solo el lienzo (Esc para salir)"><i>⛶</i><span>Enfoque</span></button>
+<button data-t="fc" title="Esconde la barra y los paneles para ver solo el lienzo (Esc para volver)"><i>⛶</i><span>Ocultar paneles</span></button>
 <button data-t="hp" title="Mostrar u ocultar las explicaciones y los nombres de los botones"><i>?</i><span>Ayudas</span></button>
 <button data-t="pn" id="tp" title="Abrir o cerrar el panel de propiedades y capas"><i>☰</i><span>Panel</span></button>
-</nav><button id="fxb">Salir del modo enfoque</button></section>
+</nav><button id="fxb">Mostrar paneles</button></section>
 <div id="dl" hidden></div>
 <input type="file" id="fi" accept="image/*" hidden><input type="file" id="tbf" accept="image/*" hidden><input type="file" id="fb" accept=".json" hidden><input type="file" id="ff" accept=".ttf,.otf,.woff,.woff2" hidden>
 <script>
@@ -141,7 +143,7 @@ const $=s=>document.querySelector(s);
 if(!window.fabric)alert('No cargó Fabric.js (¿sin internet?). Reabrí con conexión.');
 const FONTS=['Anton','Bebas Neue','Syne','Bungee','Monoton','Rubik Glitch','UnifrakturCook','Press Start 2P','Arial','Georgia','Courier New'];
 const FM=[['Portada cuadrada',3000,3000],['Miniatura YouTube',1280,720],['Portada vertical',1080,1350],['Historia Instagram',1080,1920]];
-const PR=['fd','hc','hw','inv','iid','win','bd','bdv','shp','thru','bgo','_k','name','col','sc','sw','fx','fxv','_f','_s','lockMovementX','lockMovementY','lockRotation','lockScalingX','lockScalingY','hasControls'];
+const PR=['af','lid','pf','rvid','cv','w0','eo','po','pq','fd','hc','hw','inv','iid','win','bd','bdv','shp','thru','bgo','_k','name','col','sc','sw','fx','fxv','_f','_s','lockMovementX','lockMovementY','lockRotation','lockScalingX','lockScalingY','hasControls'];
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 /* ---------- IndexedDB ---------- */
 const db=new Promise((r,j)=>{const q=indexedDB.open('portlab',1);q.onupgradeneeded=()=>q.result.createObjectStore('p',{keyPath:'id'});q.onsuccess=()=>r(q.result);q.onerror=j});
@@ -186,30 +188,34 @@ async function open(p){PJ=p;$('#home').hidden=1;$('#ed').hidden=0;
 if(!C){C=new fabric.Canvas('c',{preserveObjectStacking:true,selection:true});
 fabric.Object.prototype.set({cornerSize:20,touchCornerSize:44,transparentCorners:false,cornerColor:'#d4ff00',borderColor:'#d4ff00',cornerStyle:'circle',padding:4});
 ['object:added','object:removed','object:modified','text:editing:exited'].forEach(n=>C.on(n,snap));
-['selection:created','selection:updated','selection:cleared'].forEach(n=>C.on(n,()=>{pp();L()}));
+['selection:created','selection:updated','selection:cleared'].forEach(n=>C.on(n,()=>{{const a=C.getActiveObject();if(ER.on&&a)ER.last=a}pp();L()}));
 C.on('text:changed',e=>{refx(e.target)});touch();snapInit()}
 await Promise.all(FONTS.map(f=>document.fonts.load('24px "'+f+'"').catch(()=>0)));fabric.charWidthsCache={};
 busy=1;C.clear();C.backgroundColor='#0d0d12';
-if(p.json)await new Promise(r=>C.loadFromJSON(p.json,r));busy=0;rewin();
+if(p.json&&p.json.objects)p.json.objects.forEach(q=>['eo','po'].forEach(k=>{if(q[k+'src']){IMG[q[k]]=q[k+'src'];delete q[k+'src']}}));
+if(p.json)await new Promise(r=>C.loadFromJSON(p.json,r));bgc();busy=0;rewin();
 H=[];hi=-1;snap();fit();pp();L();DT=0;$('#st').textContent='guardado ✓';$('#ed').classList.remove('focus');sheet('peek')}
-function zoom(n){z=Math.max(.02,Math.min(4,n));C.setZoom(z);C.setDimensions({width:PJ.w*z,height:PJ.h*z});C.requestRenderAll()}
+function zoom(n){setTimeout(()=>{if(PS)psDraw()},0);z=Math.max(.02,Math.min(4,n));C.setZoom(z);C.setDimensions({width:PJ.w*z,height:PJ.h*z});C.requestRenderAll()}
 function fit(){const m=$('#main');zoom(Math.min((m.clientWidth-24)/PJ.w,(m.clientHeight-24)/PJ.h))}
 addEventListener('resize',()=>{if(C&&!$('#ed').hidden)fit()});
 const IMG={};
 function ser(h){const j=C.toJSON(PR),os=C.getObjects();j.pw=PJ.w;j.ph=PJ.h;j.objects.forEach((q,i)=>{const o=os[i];if(!o)return;
 if(o.type=='image'){if(!o.iid||!IMG[o.iid]){o.iid=o.iid||uid();IMG[o.iid]=o.getSrc()}q.iid=o.iid;if(h)q.src='@'+o.iid}
-['_f','_s','_k','win','fd'].forEach(k=>{if(o[k])q[k]=JSON.parse(JSON.stringify(o[k]))});if(o.win)q.fill=o.col||'#ffffff'});return j}
-function snap(){if(busy||!PJ)return;H=H.slice(0,hi+1);H.push(ser(1));if(H.length>40)H.shift();hi=H.length-1;L();save()}
+if(!h)['eo','po'].forEach(k=>{if(o[k]&&IMG[o[k]])q[k+'src']=IMGS(o[k])});
+['_f','_s','_k','win','fd','cv'].forEach(k=>{if(o[k])q[k]=JSON.parse(JSON.stringify(o[k]))});if(o.win)q.fill=o.col||'#ffffff'});return j}
+const IMGS=id=>{const v=IMG[id];return typeof v=='string'?v:(v&&v.toDataURL?v.toDataURL('image/png'):undefined)};
+function gcImg(){const u=new Set(),add=q=>{['iid','eo','po'].forEach(k=>q[k]&&u.add(q[k]));if(q.win&&q.win.i)u.add(q.win.i)};H.forEach(j=>j.objects.forEach(add));C.getObjects().forEach(add);Object.keys(IMG).forEach(k=>{if(!u.has(k))delete IMG[k]});Object.keys(ELS).forEach(k=>{if(!u.has(k))delete ELS[k]})}
+function snap(){if(busy||!PJ)return;H=H.slice(0,hi+1);H.push(ser(1));if(H.length>40)H.shift();hi=H.length-1;gcImg();L();save()}
 async function jump(i){if(i<0||i>=H.length)return;hi=i;busy=1;C.discardActiveObject();const j=JSON.parse(JSON.stringify(H[i])),ch=j.pw!=PJ.w||j.ph!=PJ.h;
-j.objects.forEach(q=>{if(q.type=='image'&&/^@/.test(q.src))q.src=IMG[q.src.slice(1)]});PJ.w=j.pw||PJ.w;PJ.h=j.ph||PJ.h;
-await new Promise(r=>C.loadFromJSON(j,r));busy=0;rewin();ch?fit():zoom(z);pp();L();save()}
-function rewin(){C.getObjects().forEach(o=>{if(o.win||o.bd)refx(o)})}
+j.objects.forEach(q=>{if(q.type=='image'&&/^@/.test(q.src))q.src=IMGS(q.src.slice(1))});PJ.w=j.pw||PJ.w;PJ.h=j.ph||PJ.h;
+await new Promise(r=>C.loadFromJSON(j,r));busy=0;rewin();bgc();ch?fit():zoom(z);pp();L();save()}
+function rewin(){C.getObjects().forEach(o=>{if(o.cv&&o.cv.m)o.editable=false;if(o.win||o.bd||o.rvid)refx(o)});syncPf()}
 function save(){DT=1;$('#st').textContent='● sin guardar'}
 async function flush(){clearTimeout(tm);if(!PJ||!C)return;$('#st').textContent='guardando…';PJ.json=ser(0);PJ.thumb=C.toDataURL({format:'jpeg',quality:.6,multiplier:240/(PJ.w*z)});PJ.t=Date.now();await put(PJ);DT=0;$('#st').textContent='guardado ✓'}
 /* ---------- gestos de dos dedos ---------- */
 function touch(){let g;const dd=e=>Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY),
 aa=e=>Math.atan2(e.touches[1].clientY-e.touches[0].clientY,e.touches[1].clientX-e.touches[0].clientX)*180/Math.PI,w=C.wrapperEl;
-w.addEventListener('touchstart',e=>{if(e.touches.length==2){const o=C.getActiveObject();g={o:o&&!o.lockMovementX?o:null,d:dd(e),a:aa(e),z,s:o&&o.scaleX,r:o&&o.angle};e.stopPropagation()}},{capture:true,passive:false});
+w.addEventListener('touchstart',e=>{if(e.touches.length==2){ER.cancel=1;const o=C.getActiveObject();g={o:o&&!o.lockMovementX&&!ER.on?o:null,d:dd(e),a:aa(e),z,s:o&&o.scaleX,r:o&&o.angle};e.stopPropagation()}},{capture:true,passive:false});
 w.addEventListener('touchmove',e=>{if(g&&e.touches.length==2){e.preventDefault();e.stopPropagation();if(g.o){g.o.scale(g.s*dd(e)/g.d);g.o.rotate(sa(g.r+aa(e)-g.a));g.o.setCoords();C.requestRenderAll()}else zoom(g.z*dd(e)/g.d)}},{capture:true,passive:false});
 w.addEventListener('touchend',e=>{if(g&&e.touches.length<2){if(g.o)snap();g=null}},true)}
 /* ---------- acciones ---------- */
@@ -223,8 +229,9 @@ if(t=='grid'){$('#gr').hidden=!$('#gr').hidden;e.target.closest("button").classL
 if(t=='sv'){await flush()}
 if(t=='var'){await flush();const n={...PJ,id:uid(),name:PJ.name+' · var',t:Date.now(),c:Date.now()};await put(n);open(n)}
 if(t=='tx')txm();
+if(t=='er'){ER.on?erOff():erOn()}
 if(t=='rs')rsM();
-if(t=='fc')focus();
+if(t=='fc')toggleFocus();
 if(t=='sn'){SN=!SN;snapRot();e.target.closest('button').classList.toggle('on',SN);gd()}
 if(t=='hp'){HP=!HP;try{localStorage.pl_help=HP?1:0}catch(x){}hp()}
 if(t=='xp')xp();
@@ -237,10 +244,11 @@ const k=Math.min(1,2048/Math.max(im.width,im.height)),c=document.createElement('
 const u=c.toDataURL(f.type=='image/png'?'image/png':'image/jpeg',.9);URL.revokeObjectURL(im.src);
 fabric.Image.fromURL(u,o=>{o.scaleToWidth(PJ.w*.7);o.set({left:PJ.w/2,top:PJ.h/2,originX:'center',originY:'center',name:'Imagen',_f:{},_s:{}});C.add(o);C.setActiveObject(o)})};
 im.onerror=()=>alert('No se pudo leer la imagen');im.src=URL.createObjectURL(f)};
-function addText(){const t=new fabric.Textbox('TEXTO',{left:PJ.w/2,top:PJ.h/2,originX:'center',originY:'center',width:PJ.w*.6,fontSize:PJ.w*.08,fontFamily:'Anton',textAlign:'center',col:'#ffffff',fx:'normal',fxv:50,name:'Texto'});fx(t,'normal');C.add(t);C.setActiveObject(t)}
+function addText(){const t=new fabric.Textbox('TEXTO',{left:PJ.w/2,top:PJ.h/2,originX:'center',originY:'center',width:PJ.w*.6,fontSize:PJ.w*.08,fontFamily:'Anton',textAlign:'center',col:'#ffffff',fx:'normal',fxv:50,name:'Texto'});t.af=true;fitBox(t);fx(t,'normal');C.add(t);C.setActiveObject(t)}
 /* ---------- efectos de texto ---------- */
 function font(t,f){document.fonts.load('24px "'+f+'"').then(()=>{fabric.charWidthsCache={};t.set('fontFamily',f);t.initDimensions();fx(t,t.fx);C.requestRenderAll();snap()})}
-function refx(o){if(o&&o.type=='textbox')fx(o,o.fx||'normal')}
+function fitBox(t){if(!t||t.type!='textbox')return;t.set('width',1e5);t.initDimensions();const w=t.calcTextWidth();t.set('width',Math.max(10,Math.ceil(w)+4));t.initDimensions();t.setCoords()}
+function refx(o){if(o&&o.type=='textbox'){if(o.af&&!(o.cv&&o.cv.m))fitBox(o);fx(o,o.fx||'normal')}}
 function fx(t,n,v){t.fx=n;if(v!=null)t.fxv=+v;v=t.fxv||50;const k=v/50,s=t.fontSize,c=t.col||'#ffffff',
 g=(...st)=>new fabric.Gradient({type:'linear',coords:{x1:0,y1:0,x2:0,y2:t.height},colorStops:st.map((x,i)=>({offset:i/(st.length-1),color:x}))}),
 sh=(co,b,x=0,y=0)=>t.shadow=new fabric.Shadow({color:co,blur:b,offsetX:x,offsetY:y});
@@ -252,9 +260,11 @@ if(n=='outline')t.set({fill:'rgba(0,0,0,0)',stroke:c,strokeWidth:Math.max(1,s*.0
 if(n=='glitch'){sh('#00f0ff',0,8*k,0);t.set({stroke:'#ff0044',strokeWidth:s*.008*k})}
 if(n=='3d')sh('#8a8f9c',0,5*k,5*k);
 if(t.hw&&!t.shadow)sh(t.hc||'#000000',t.hw);
-if(t.fd&&t.fd.on&&n!='outline'){const F=t.fd,hr=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16)),A=F.a*Math.PI/180,cx=t.width/2,cy=t.height/2,L=Math.abs(t.width*Math.cos(A))/2+Math.abs(t.height*Math.sin(A))/2,dx=Math.cos(A)*L,dy=Math.sin(A)*L,rc=(h,a)=>`rgba(${hr(h).join(',')},${a})`,c2=F.c||c;
-t.set('fill',new fabric.Gradient({type:'linear',gradientUnits:'pixels',coords:{x1:cx-dx,y1:cy-dy,x2:cx+dx,y2:cy+dy},colorStops:[{offset:0,color:rc(c,1)},{offset:Math.min(1,F.l/100),color:rc(c2,F.o/100)},{offset:1,color:rc(c2,F.o/100)}]}))}
-winfx(t);t.dirty=true}
+if(t.fd&&t.fd.on&&n!='outline'&&!(t.cv&&t.cv.m)){const F=t.fd,hr=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16)),A=F.a*Math.PI/180,rc=(h,a)=>`rgba(${hr(h).join(',')},${a})`,c2=F.c||c;
+let x0=1e9,x1=-1e9;const nl=(t._textLines||[]).length;for(let i=0;i<nl;i++){const lw=t.getLineWidth(i),lo=t._getLineLeftOffset(i);x0=Math.min(x0,lo);x1=Math.max(x1,lo+lw)}if(!(x1>x0)){x0=0;x1=t.width}
+const cx=(x0+x1)/2,cy=t.height/2,L=(x1-x0)/2*Math.abs(Math.cos(A))+cy*Math.abs(Math.sin(A)),dx=Math.cos(A)*L,dy=Math.sin(A)*L,st=Math.min(.99,(F.s||0)/100),en=Math.max(st+.01,Math.min(1,F.l/100));
+t.set('fill',new fabric.Gradient({type:'linear',gradientUnits:'pixels',coords:{x1:cx-dx,y1:cy-dy,x2:cx+dx,y2:cy+dy},colorStops:[{offset:0,color:rc(c,1)},{offset:st,color:rc(c,1)},{offset:en,color:rc(c2,F.o/100)},{offset:1,color:rc(c2,F.o/100)}]}))}
+winfx(t);t.dirty=true;if(t.lid)syncPf()}
 /* ---------- panel de propiedades ---------- */
 const BM=[['source-over','Normal'],['multiply','Multiplicar (oscurece)'],['screen','Trama (aclara)'],['overlay','Superponer (más contraste)'],['soft-light','Luz suave'],['hard-light','Luz intensa'],['difference','Diferencia (invierte colores)'],['exclusion','Exclusión'],['color-dodge','Sobreexponer'],['darken','Solo lo más oscuro'],['lighten','Solo lo más claro']];
 const HELP={op:'Qué tan visible es la capa: 100 = sólida, 0 = invisible.',an:'Gira la capa. También podés girarla con la manija del lienzo o con dos dedos.',bm:'Cómo se mezcla esta capa con lo que tiene detrás (fotos, texturas, fondo). Probá Superponer o Multiplicar para integrar un texto o una textura a la foto.',
@@ -269,18 +279,18 @@ const col=(l,k,v,d)=>ct(l,k,`<input type=color data-k=${k} value="${v}">`,d);
 const sl=(l,k,o,v,d)=>ct(l,k,`<select data-k=${k}>${o.map(x=>`<option value="${x[0]}"${x[0]==v?' selected':''}>${x[1]}`).join('')}</select>`,d);
 const sec=(t,b,op)=>`<details${op?' open':''}><summary>${t}</summary>${b}</details>`;
 const hx=(r,g,b)=>'#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join(''),rgb=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16));
-function pp(){const o=C.getActiveObject(),s=$('#pp');{const sn=$('#shn');if(sn)sn.textContent=o?(o.name||o.type):'Sin selección'}
-if(!o){s.innerHTML='<h3>Lienzo</h3>'+col('Color de fondo','bg',C.backgroundColor||'#000000','#0d0d12')+'<small class=hp>Tocá un elemento para editarlo, o agregá uno con Imagen, Texto o Textura en la barra de herramientas.</small>';return}
+function pp(){const o=C.getActiveObject(),s=$('#pp');{const sn=$('#shn');if(sn)sn.textContent=PS?'Perspectiva':ER.on?'Borrador':o?(o.name||o.type):'Sin selección'}if(PS){s.innerHTML=psPanel();return}if(ER.on){s.innerHTML=erPanel();return}
+if(!o){bgc();s.innerHTML='<h3>Lienzo</h3>'+sl('Fondo','bgm',[['c','Con color'],['t','Transparente (se ve con cuadritos)']],C.backgroundColor?'c':'t','c')+col('Color de fondo','bg',C.backgroundColor||PJ.bgc||'#0d0d12','#0d0d12')+'<small class=hp>Tocá un elemento para editarlo, o agregá uno con Imagen, Texto o Textura en la barra de herramientas.</small>';return}
 const f=o._f||{},sh=o._s||{},k=o._k=o._k||{c:'#ffffff',t:25,f:10,m:'edge'},T=o.type=='textbox',I=o.type=='image';
-let h=`<h3>${o.name||o.type}</h3>`+sec('Posición y forma',coords(o)+rg('Opacidad','op',0,100,1,Math.round(o.opacity*100),100)+rg('Rotación (grados)','an',0,360,1,Math.round(((o.angle%360)+360)%360),0)
+let h=`<h3>${o.name||o.type}</h3>`+(o.type=='rect'?sec('Relleno',col('Color de relleno','rf',o.fill||'#000000','#000000'),1):'')+sec('Posición y forma',coords(o)+rg('Opacidad','op',0,100,1,Math.round(o.opacity*100),100)+rg('Rotación (grados)','an',0,360,1,Math.round(((o.angle%360)+360)%360),0)
 +'<div class=r><button data-a=ctr>Centrar en el lienzo</button><button data-a=fh>Voltear horizontal</button><button data-a=fv>Voltear vertical</button><button data-a=dup>Duplicar</button><button data-a=del>Eliminar</button></div>'
-+(I?'<div class=r><button data-a=crop>Recortar imagen</button><button data-a=rz>Restablecer tamaño y posición</button><button data-a=fl>Ajustar al lienzo (entra completa)</button><button data-a=cv>Cubrir lienzo (sin bordes vacíos)</button></div>':''),1)
++(I?'<div class=r><button data-a=psp>Perspectiva (4 esquinas)</button><button data-a=crop>Recortar imagen</button><button data-a=rz>Restablecer tamaño y posición</button><button data-a=fl>Ajustar al lienzo (entra completa)</button><button data-a=cv>Cubrir lienzo (sin bordes vacíos)</button></div>':''),1)
 +sec('Fusión con lo de atrás',sl('Modo de fusión','bm',BM,o.globalCompositeOperation||'source-over','source-over'));
-if(T)h+=sec('Texto',`<div class=ct><label>Contenido</label><textarea data-k=tx rows=2>${o.text.replace(/</g,'&lt;')}</textarea></div>`+sl('Tipografía','ft',FONTS.map(x=>[x,(MYF.includes(x)?'★ ':'')+x]),o.fontFamily,'Anton')+'<div class=r><button data-a=ff>Importar fuente (.ttf .otf .woff2)</button><button data-a=mf>Mis fuentes</button></div>'
+if(T)h+=sec('Texto',`<div class=ct><label>Contenido</label><textarea data-k=tx rows=2>${o.text.replace(/</g,'&lt;')}</textarea></div>`+sl('Tipografía','ft',FONTS.map(x=>[x,(MYF.includes(x)?'★ ':'')+x]),o.fontFamily,'Anton')+'<div class=r><button data-a=ff>Importar fuente (.ttf .otf .woff2)</button><button data-a=mf>Mis fuentes</button><button data-a=fitb>Ajustar caja al texto</button></div><small class=hp>“Ajustar caja al texto” hace que el recuadro de selección mida lo mismo que las letras, así el desvanecido y la alineación se calculan sobre las letras y no sobre un recuadro más grande.</small>'
 +rg('Tamaño','sz',10,Math.round(PJ.w/2),1,Math.round(o.fontSize),Math.round(PJ.w*.08))+col('Color','col',o.col||'#ffffff','#ffffff')+fdBlock(o)+rg('Espaciado entre letras','sp',-100,800,10,o.charSpacing||0,0)+rg('Altura de línea','lh',.6,2.5,.05,o.lineHeight,1.16)
-+sl('Alineación','al',[['left','Izquierda'],['center','Centro'],['right','Derecha']],o.textAlign,'center'),1)
++sl('Alineación','al',[['left','Izquierda'],['center','Centro'],['right','Derecha']],o.textAlign,'center')+cvBlock(o),1)
 +sec('Contorno y efectos',col('Color de contorno','sc',o.sc||'#000000','#000000')+rg('Grosor de contorno','sw',0,Math.round(PJ.w/50),1,o.sw||0,0)+sl('Posición del contorno','so',[['c','Centrado sobre la letra'],['out','Exterior (no tapa la letra)']],o.paintFirst=='stroke'?'out':'c','c')+col('Color del halo','hc',o.hc||'#000000','#000000')+rg('Halo de contraste','hw',0,100,1,o.hw||0,0)
-+sl('Efecto','fx',[['normal','Ninguno'],['chrome','CHROME'],['blood','BLOOD'],['glitch','GLITCH'],['glow','GLOW'],['outline','OUTLINE'],['3d','3D'],['pixel','PIXEL (cambia la fuente)'],['gothic','GOTHIC (cambia la fuente)']],o.fx||'normal','normal')+rg('Intensidad del efecto','fv',5,100,1,o.fxv||50,50),1)+winSec(o);
++sl('Efecto','fx',[['normal','Ninguno'],['chrome','CHROME'],['blood','BLOOD'],['glitch','GLITCH'],['glow','GLOW'],['outline','OUTLINE'],['3d','3D'],['pixel','PIXEL (cambia la fuente)'],['gothic','GOTHIC (cambia la fuente)']],o.fx||'normal','normal')+rg('Intensidad del efecto','fv',5,100,1,o.fxv||50,50),1)+winSec(o)+winSec2(o);
 if(I)h+=sec('Color y ajustes',rg('Brillo','br',-100,100,1,f.br||0,0)+rg('Contraste','co',-100,100,1,f.co||0,0)+rg('Saturación','sa',-100,100,1,f.sa||0,0)+rg('Temperatura','te',-100,100,1,f.te||0,0)+rg('Desenfoque','bl',0,100,1,f.bl||0,0)
 +sl('Escala de grises','gr',[['0','No'],['1','Sí']],f.gr?'1':'0','0')+'<div class=r><button data-a=rsf>Restablecer todos los ajustes de color</button></div>',1)
 +sec('Sombra y borde',rg('Sombra','sb',0,100,1,sh.b||0,0)+col('Color de sombra','sc2',sh.c||'#000000','#000000')+rg('Borde','bw',0,Math.round(PJ.w/20),1,o.strokeWidth||0,0)+col('Color de borde','bc',o.stroke||'#ffffff','#ffffff'))
@@ -292,38 +302,44 @@ if(f.br)a.push(new F.Brightness({brightness:f.br/100}));if(f.co)a.push(new F.Con
 if(f.te){const t=f.te/100*.25;a.push(new F.ColorMatrix({matrix:[1,0,0,0,t,0,1,0,0,0,0,0,1,0,-t,0,0,0,1,0]}))}
 if(f.gr)a.push(new F.Grayscale());if(f.bl)a.push(new F.Blur({blur:f.bl/100*.2}));o.filters=a;o.applyFilters()}
 function setp(el){const k=el.dataset.k,v=el.value;if(!k||(el.type=='number'&&v===''))return;
-if(k=='bg'){C.backgroundColor=v;C.requestRenderAll();return}
+if(k=='bg'){C.backgroundColor=v;PJ.bgc=v;bgc();C.requestRenderAll();return}
+if(k=='bgm'){C.backgroundColor=v=='t'?'':(PJ.bgc||'#0d0d12');bgc();C.requestRenderAll();return}
+if(ER.on&&['ers','ersz','erh','ero'].includes(k)){if(k=='ers'){ER.scope=v;pp();L()}else if(k=='ersz')ER.size=+v;else if(k=='erh')ER.hard=+v;else ER.op=+v;return}
 const o=C.getActiveObject();if(!o)return;o._f=o._f||{};o._s=o._s||{};o._k=o._k||{c:'#ffffff',t:25,f:10,m:'edge'};
 const ff=()=>{o._f[k]=+v;filt(o)};
-const m={op:()=>o.set('opacity',v/100),an:()=>{let a=+v;if(SN){const n=Math.round(a/90)*90;if(Math.abs(a-n)<5){a=n;el.value=n}}o.rotate(a%360);o.setCoords()},bm:()=>o.set('globalCompositeOperation',v),tx:()=>{o.set('text',v);refx(o)},ft:()=>font(o,v),sz:()=>{o.set('fontSize',+v);refx(o)},col:()=>{o.col=v;refx(o)},
+const cvf=key=>()=>{o.cv[key]=+v;o.initDimensions();o.setCoords();syncPf()};
+const m={rf:()=>o.set('fill',v),rvc:()=>{const c=C.getObjects().find(q=>q.lid==o.rvid);if(c)c.set('fill',v)},pfa:()=>{if(!v)return;const t=C.getObjects().find(q=>q.lid==v);if(!t)return;if(t.shp&&!t.pf){toast('Esa capa ya tiene un recorte con forma. Quitá el recorte primero.');return}t.pf=LID(o);syncPf();pp()},
+cvm:()=>{if(v=='0'){if(o.cv&&o.cv.m)o.width=o.w0||o.width;o.cv=null;o.editable=true}else{if(!o.cv||!o.cv.m)o.w0=o.width;o.cv={m:v,k:(o.cv&&o.cv.k)||60,s:0,a:60,l:100,g:1.2};o.editable=false}o.initDimensions();o.setCoords();refx(o);pp()},cvk:cvf('k'),cvs:cvf('s'),cva:cvf('a'),cvl:cvf('l'),cvg:cvf('g'),
+op:()=>o.set('opacity',v/100),an:()=>{let a=+v;if(SN){const n=Math.round(a/90)*90;if(Math.abs(a-n)<5){a=n;el.value=n}}o.rotate(a%360);o.setCoords()},bm:()=>o.set('globalCompositeOperation',v),tx:()=>{o.set('text',v);refx(o)},ft:()=>font(o,v),sz:()=>{o.set('fontSize',+v);refx(o)},col:()=>{o.col=v;refx(o)},
 sp:()=>o.set('charSpacing',+v),lh:()=>o.set('lineHeight',+v),al:()=>o.set('textAlign',v),sc:()=>{o.sc=v;refx(o)},sw:()=>{o.sw=+v;refx(o)},
 fx:()=>{if(v=='pixel'||v=='gothic'){font(o,v=='pixel'?'Press Start 2P':'UnifrakturCook');fx(o,'normal')}else fx(o,v)},fv:()=>fx(o,o.fx||'normal',v),so:()=>{o.paintFirst=v=='out'?'stroke':'fill'},hc:()=>{o.hc=v;fx(o,o.fx||'normal')},hw:()=>{o.hw=+v;fx(o,o.fx||'normal')},
-fd:()=>{o.fd=o.fd||{on:0,c:null,o:0,a:90,l:100};o.fd.on=v=='1';fx(o,o.fx||'normal');pp()},fc:()=>{FD(o).c=v;fx(o,o.fx||'normal')},fo:()=>{FD(o).o=+v;fx(o,o.fx||'normal')},fa:()=>{FD(o).a=+v;fx(o,o.fx||'normal');document.querySelectorAll('#pp [data-a=fdir]').forEach(b=>b.classList.toggle('on',+b.dataset.v==Math.round(+v)))},fl:()=>{FD(o).l=+v;fx(o,o.fx||'normal')},wi:()=>{o.win=v?{...(o.win||{s:100,x:0,y:0}),i:v}:null;fx(o,o.fx||'normal')},ws:()=>{if(o.win){o.win.s=+v;fx(o,o.fx||'normal')}},wx:()=>{if(o.win){o.win.x=+v;fx(o,o.fx||'normal')}},wy:()=>{if(o.win){o.win.y=+v;fx(o,o.fx||'normal')}},bd:()=>{o.bd=v=='0'?null:v;o.bdv=o.bdv||50;fx(o,o.fx||'normal')},bdv:()=>{o.bdv=+v},
+fd:()=>{o.fd=o.fd||{on:0,c:null,o:0,a:90,l:100};o.fd.on=v=='1';fx(o,o.fx||'normal');pp()},fc:()=>{FD(o).c=v;fx(o,o.fx||'normal')},fo:()=>{FD(o).o=+v;fx(o,o.fx||'normal')},fa:()=>{FD(o).a=+v;fx(o,o.fx||'normal');document.querySelectorAll('#pp [data-a=fdir]').forEach(b=>b.classList.toggle('on',+b.dataset.v==Math.round(+v)))},fl:()=>{FD(o).l=+v;fx(o,o.fx||'normal')},fs:()=>{FD(o).s=+v;fx(o,o.fx||'normal')},wi:()=>{o.win=v?{...(o.win||{s:100,x:0,y:0}),i:v}:null;fx(o,o.fx||'normal')},ws:()=>{if(o.win){o.win.s=+v;fx(o,o.fx||'normal')}},wx:()=>{if(o.win){o.win.x=+v;fx(o,o.fx||'normal')}},wy:()=>{if(o.win){o.win.y=+v;fx(o,o.fx||'normal')}},bd:()=>{o.bd=v=='0'?null:v;o.bdv=o.bdv||50;fx(o,o.fx||'normal')},bdv:()=>{o.bdv=+v},
 br:ff,co:ff,sa:ff,te:ff,bl:ff,gr:()=>{o._f.gr=v=='1';filt(o)},
 sb:()=>{o._s.b=+v;shi(o)},sc2:()=>{o._s.c=v;shi(o)},bw:()=>o.set('strokeWidth',+v),bc:()=>o.set('stroke',v),
 px:()=>{const q=o.getPointByOrigin('left','top');o.setPositionByOrigin(new fabric.Point(+v,q.y),'left','top');o.setCoords()},py:()=>{const q=o.getPointByOrigin('left','top');o.setPositionByOrigin(new fabric.Point(q.x,+v),'left','top');o.setCoords()},pw:()=>sz(o,+v,0),ph:()=>sz(o,0,+v),kc:()=>o._k.c=v,kt:()=>o._k.t=+v,kf:()=>o._k.f=+v,km:()=>o._k.m=v};
 m[k]&&m[k]();C.requestRenderAll()}
 function shi(o){const s=o._s;o.shadow=s.b?new fabric.Shadow({color:s.c||'#000',blur:s.b*2,offsetX:s.b/2,offsetY:s.b/2}):null}
 $('#side').addEventListener('input',e=>setp(e.target));
-$('#side').addEventListener('change',()=>snap());
+$('#side').addEventListener('change',()=>{if(!ER.on)snap()});
 $('#pp').addEventListener('click',e=>{const rs=e.target.closest('[data-rs]');
 if(rs){const i=rs.closest('.ct').querySelector('[data-k]');i.value=rs.dataset.d;i.dispatchEvent(new Event('input',{bubbles:true}));i.dispatchEvent(new Event('change',{bubbles:true}));return}
-const a=e.target.dataset.a,o=C.getActiveObject();if(!a||!o)return;
+const a=e.target.dataset.a,o=C.getActiveObject();if(a=='psok'){psOff(1);return}if(a=='psno'){psOff(0);return}if(a=='psrs'){PS.q=PS.q0.map(p=>p.slice());psPos();psApplyNow(true);return}if(a=='erm'){ER.mode=e.target.dataset.v;pp();return}if(a=='erx'){erOff();return}if(!a||!o)return;
 if(a=='fh')o.set('flipX',!o.flipX);if(a=='fv')o.set('flipY',!o.flipY);
 if(a=='ctr'){o.set({originX:'center',originY:'center',left:PJ.w/2,top:PJ.h/2});o.setCoords()}
 if(a=='rz')fitI(o,'r');if(a=='fl')fitI(o,'f');if(a=='cv')fitI(o,'c');
 if(a=='rsf'){o._f={};filt(o);pp()}
 if(a=='pick'){pickC(o);return}if(a=='keyap'){keyBg(o);return}if(a=='keyrs'){keyRs(o);return}
-if(a=='fdir'){FD(o).a=+e.target.dataset.v;fx(o,o.fx||'normal');pp();C.requestRenderAll();snap();return}if(a=='ff'){$('#ff').click();return}if(a=='mf'){fontsM();return}
+if(a=='fdir'){FD(o).a=+e.target.dataset.v;fx(o,o.fx||'normal');pp();C.requestRenderAll();snap();return}if(a=='psp'){psOn(o);return}if(a=='ff'){$('#ff').click();return}if(a=='rev'){o.rvid?revealOff(o):revealOn(o);pp()}if(a=='pfx'){const t=C.getObjects().find(q=>q.lid==e.target.dataset.v);if(t){t.clipPath=null;t.pf=null}pp()}if(a=='fitb'){o.af=true;fitBox(o);refx(o);pp()}if(a=='mf'){fontsM();return}
 if(a=='crop'){cropUI(o);return}if(a=='lkp'){LK=!LK;C.uniformScaling=LK;pp();return}
 if(a=='eq'){const q=C.getObjects().map((x,i)=>[x,i]).filter(t=>t[0]!==o).reverse();M('<h3>Igualar a otra capa</h3><small class=hp>Esta capa copia la posición, el tamaño y la rotación de la capa que elijas.</small>'+q.map(t=>`<button data-eq="${t[1]}">${esc(t[0].name||t[0].type)}</button>`).join('')+'<button>Cancelar</button>');return}
 if(a=='dup')dupo(o);if(a=='del'){C.remove(o);C.discardActiveObject()}C.requestRenderAll();snap()});
 function dupo(o){o.clone(c=>{c.set({left:o.left+30,top:o.top+30,name:(o.name||'')+' copia'});C.add(c);C.setActiveObject(c)},PR)}
 /* ---------- capas ---------- */
 function L(){if(!C)return;const a=C.getActiveObject(),B=(c,t,i,l)=>`<button data-a=${c} title="${t}"><i>${i}</i><em>${l}</em></button>`;
-$('#ly').innerHTML=C.getObjects().map((o,i)=>{const q=o.getPointByOrigin('left','top');return `<div class="ly${o==a?' sel':''}" data-i=${i}><span data-a=sel>${esc(o.name||o.type)}<small>X ${Math.round(q.x)} · Y ${Math.round(q.y)} · ${Math.round(o.getScaledWidth())}×${Math.round(o.getScaledHeight())}</small></span>`
+$('#ly').innerHTML=C.getObjects().map((o,i)=>{const q=o.getPointByOrigin('left','top');return `<div class="ly${o==a?' sel':''}" data-i=${i}><span data-a=sel>${esc(o.name||o.type)}<small>X ${Math.round(q.x)} · Y ${Math.round(q.y)} · ${Math.round(o.getScaledWidth())}×${Math.round(o.getScaledHeight())}</small></span>`+(ER.on&&ER.scope=='chk'?(o.type=='image'?`<label class=erk><input type=checkbox data-a=erk ${ER.set.has(o)?'checked':''}> afectar con el borrador</label>`:'<small>texto: el borrador no lo afecta</small>'):'')
 +B('edit','Seleccionar esta capa y abrir sus propiedades','◎','Editar')+B('thru','Atravesar: los toques en el lienzo pasan de largo y no seleccionan esta capa','⇩'+(o.thru?'✓':''),'Atravesar')+B('vis','Mostrar u ocultar esta capa',o.visible?'◉':'○','Ver')+B('lk','Bloquear o desbloquear',o.lockMovementX?'🔒':'🔓','Bloquear')+B('up','Subir una posición','▲','Subir')+B('dn','Bajar una posición','▼','Bajar')+B('ren','Cambiar el nombre','✎','Nombre')+B('dup','Duplicar','⎘','Duplicar')+B('del','Eliminar','✕','Borrar')+'</div>'}).reverse().join('')}
 $('#ly').onclick=e=>{const bt=e.target.closest('[data-a]'),a=bt&&bt.dataset.a,r=e.target.closest('.ly');if(!a||!r)return;const o=C.item(+r.dataset.i);if(!o)return;
+if(a=='erk'){ER.set.has(o)?ER.set.delete(o):ER.set.add(o)}
 if(a=='sel'&&o.visible)C.setActiveObject(o);
 if(a=='edit'){C.setActiveObject(o);sheet('half');$('#side').scrollTop=0}
 if(a=='thru'){o.thru=!o.thru;o.evented=!o.thru}
@@ -332,17 +348,17 @@ if(a=='lk'){const b=!o.lockMovementX;o.set({lockMovementX:b,lockMovementY:b,lock
 if(a=='up')C.bringForward(o);if(a=='dn')C.sendBackwards(o);
 if(a=='ren'){const n=prompt('Nombre de la capa',o.name||'');if(n)o.name=n}
 if(a=='dup')dupo(o);if(a=='del'){C.remove(o);C.discardActiveObject()}
-C.requestRenderAll();if(a!='sel'&&a!='edit'){snap()}pp();L()};
+C.requestRenderAll();if(a!='sel'&&a!='edit'&&a!='erk'){snap()}pp();L()};
 /* ---------- exportar ---------- */
-function xp(){const{w,h}=PJ;M(`<h3>Exportar</h3><label>Formato</label><select id=xf><option>png<option>jpg</select><label>Calidad (JPG)</label><input id=xq type=range min=50 max=100 value=92><label>Tamaño</label><select id=xs><option value=1>100% · ${w}×${h}<option value=.75>75% · ${Math.round(w*.75)}×${Math.round(h*.75)}<option value=.5>50% · ${Math.round(w*.5)}×${Math.round(h*.5)}<option value=.25>25% · ${Math.round(w*.25)}×${Math.round(h*.25)}</select><button id=xg>Descargar</button><small style="color:#8e96aa;display:block;margin-top:8px">Si el celular falla con tamaños grandes, elegí un tamaño menor.</small>`);
-$('#xg').onclick=()=>{C.discardActiveObject();C.requestRenderAll();const m=+$('#xs').value,j=$('#xf').value=='jpg';
-try{const el=C.toCanvasElement(m/z);el.toBlob(b=>{if(!b)return alert('No se pudo exportar. Probá un tamaño menor.');const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=PJ.name+(j?'.jpg':'.png');a.click();setTimeout(()=>URL.revokeObjectURL(a.href),9000);$('#dl').hidden=1},j?'image/jpeg':'image/png',$('#xq').value/100)}catch(x){alert('Error al exportar: '+x.message+'. Probá un tamaño menor.')}}}
+function xp(){const{w,h}=PJ;M(`<h3>Exportar</h3><label>Formato</label><select id=xf><option>png<option>jpg</select><label>Calidad (JPG)</label><input id=xq type=range min=50 max=100 value=92><label>Tamaño</label><select id=xs><option value=1>100% · ${w}×${h}<option value=.75>75% · ${Math.round(w*.75)}×${Math.round(h*.75)}<option value=.5>50% · ${Math.round(w*.5)}×${Math.round(h*.5)}<option value=.25>25% · ${Math.round(w*.25)}×${Math.round(h*.25)}</select><label style="display:flex;gap:8px;align-items:center"><input type=checkbox id=xt style="width:auto;min-height:0"> Fondo transparente (solo PNG)</label><small class=hp>Con fondo transparente, los modos de fusión (Multiplicar, Superponer…) pueden verse distintos que sobre el fondo del lienzo. El JPG no admite transparencia.</small><button id=xg>Descargar</button><small style="color:#8e96aa;display:block;margin-top:8px">Si el celular falla con tamaños grandes, elegí un tamaño menor.</small>`);
+$('#xf').onchange=()=>{$('#xt').disabled=$('#xf').value=='jpg'};$('#xg').onclick=()=>{C.discardActiveObject();C.requestRenderAll();const m=+$('#xs').value,j=$('#xf').value=='jpg';
+try{const tp=$('#xt').checked&&!j,bg0=C.backgroundColor;if(tp)C.backgroundColor='';const el=C.toCanvasElement(m/z);C.backgroundColor=bg0;el.toBlob(b=>{if(!b)return alert('No se pudo exportar. Probá un tamaño menor.');const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=PJ.name+(j?'.jpg':'.png');a.click();setTimeout(()=>URL.revokeObjectURL(a.href),9000);$('#dl').hidden=1},j?'image/jpeg':'image/png',$('#xq').value/100)}catch(x){alert('Error al exportar: '+x.message+'. Probá un tamaño menor.')}}}
 /* ---------- ayudas ---------- */
 let HP=1,SN=true;try{HP=localStorage.pl_help!='0'}catch(e){}
 function hp(){document.body.classList.toggle('nohelp',!HP)}hp();
 /* ---------- imán y guías ---------- */
 function gd(x,y){const a=$('#gvx'),b=$('#gvy');a.hidden=x==null;b.hidden=y==null;if(x!=null)a.style.left=x*z+'px';if(y!=null)b.style.top=y*z+'px'}
-function snapInit(){snapRot();C.on('after:render',e=>bdr(e.ctx));['object:moving','object:scaling','object:modified'].forEach(n=>C.on(n,()=>C.getObjects().forEach(o=>{if(o.win)refx(o)})));pickInit();['object:moving','object:scaling','object:rotating','object:modified'].forEach(n=>C.on(n,upd));C.on('object:added',e=>{e.target.evented=!e.target.thru});C.wrapperEl.addEventListener('contextmenu',e=>e.preventDefault());
+function snapInit(){snapRot();['object:moving','object:scaling','object:rotating','object:modified','text:changed'].forEach(n=>C.on(n,syncPf));C.on('object:removed',e=>{if(busy)return;const q=e.target;if(!q.lid)return;if(q.rvid){const cv=C.getObjects().find(x=>x.lid==q.rvid);if(cv)C.remove(cv)}C.getObjects().forEach(t=>{if(t.pf==q.lid){t.clipPath=null;t.pf=null}if(t.rvid&&t.rvid==q.lid){t.rvid=null;refx(t)}})});erInit();C.on('object:modified',e=>{const o=e.target,c=e.transform&&e.transform.corner;if(o&&o.type=='textbox'&&/^m[lr]$/.test(c||''))o.af=false});C.on('after:render',e=>bdr(e.ctx));['object:moving','object:scaling','object:modified'].forEach(n=>C.on(n,()=>C.getObjects().forEach(o=>{if(o.win)refx(o)})));pickInit();['object:moving','object:scaling','object:rotating','object:modified'].forEach(n=>C.on(n,upd));C.on('object:added',e=>{e.target.evented=!e.target.thru});C.wrapperEl.addEventListener('contextmenu',e=>e.preventDefault());
 C.on('object:moving',e=>{if(!SN)return;const o=e.target,t=(innerWidth<800?16:10)/z,b=o.getBoundingRect(true,true);let gx=null,gy=null,bx=t,by=t,dx=0,dy=0;
 for(const v of[b.left,b.left+b.width/2,b.left+b.width])for(const T of[0,PJ.w/2,PJ.w]){const d=T-v;if(Math.abs(d)<bx){bx=Math.abs(d);dx=d;gx=T}}
 for(const v of[b.top,b.top+b.height/2,b.top+b.height])for(const T of[0,PJ.h/2,PJ.h]){const d=T-v;if(Math.abs(d)<by){by=Math.abs(d);dy=d;gy=T}}
@@ -415,10 +431,10 @@ o.setPositionByOrigin(q,'left','top');o.setCoords()}
 function upd(){const o=C.getActiveObject();if(!o||!$('#pp [data-k=px]'))return;const q=o.getPointByOrigin('left','top'),S=(k,v)=>{const i=$('#pp [data-k='+k+']');if(i&&document.activeElement!==i)i.value=Math.round(v*10)/10};
 S('px',q.x);S('py',q.y);S('pw',o.getScaledWidth());S('ph',o.getScaledHeight());S('an',((o.angle%360)+360)%360)}
 function pickInit(){let dn=null,lp=0,last=null,cyc=null;const clr=()=>clearTimeout(lp),stack=p=>C.getObjects().filter(o=>o.visible&&o.containsPoint(p,null,true)).reverse();
-C.on('mouse:down',e=>{clr();const p=e.absolutePointer;dn={x:p.x,y:p.y,a:C.getActiveObject()};
+C.on('mouse:down',e=>{if(ER.on)return;clr();const p=e.absolutePointer;dn={x:p.x,y:p.y,a:C.getActiveObject()};
 lp=setTimeout(()=>{const s=stack(p);if(s.length>1&&dn&&!dn.moved){dn=null;M('<h3>Capas en este punto</h3><small class=hp>Elegí cuál querés editar.</small>'+s.map(o=>`<button data-ls="${C.getObjects().indexOf(o)}">${esc(o.name||o.type)}</button>`).join('')+'<button>Cancelar</button>')}},600)});
-C.on('mouse:move',e=>{if(dn&&Math.hypot(e.absolutePointer.x-dn.x,e.absolutePointer.y-dn.y)>6/z){clr();dn.moved=1}});
-C.on('mouse:up',e=>{clr();if(!dn||dn.moved){dn=null;return}const p=e.absolutePointer,a=dn.a;dn=null;
+C.on('mouse:move',e=>{if(!ER.on&&dn&&Math.hypot(e.absolutePointer.x-dn.x,e.absolutePointer.y-dn.y)>6/z){clr();dn.moved=1}});
+C.on('mouse:up',e=>{if(ER.on)return;clr();if(!dn||dn.moved){dn=null;return}const p=e.absolutePointer,a=dn.a;dn=null;
 const near=last&&Date.now()-last.t<800&&Math.hypot(p.x-last.x,p.y-last.y)<12/z,s=stack(p);
 if(near&&s.length>1&&(cyc||(a&&a.type!='textbox'&&s.includes(a)))){const i=((cyc?cyc.i:s.indexOf(a))+1)%s.length;cyc={i};C.setActiveObject(s[i]);C.requestRenderAll()}else cyc=null;
 last={x:p.x,y:p.y,t:Date.now()}})}
@@ -512,12 +528,12 @@ fitV();ui()}
 
 /* ---------- texto: relleno con imagen y efecto vidrio ---------- */
 const ELS={};
-function imgEl(i){if(ELS[i]&&ELS[i].complete)return ELS[i];if(!ELS[i]){const e=new Image();e.onload=()=>{C.getObjects().forEach(o=>{if(o.win&&o.win.i==i)refx(o)});C.requestRenderAll()};e.src=IMG[i];ELS[i]=e}return null}
+function imgEl(i){if(IMG[i]&&typeof IMG[i]!='string')return IMG[i];if(ELS[i]&&ELS[i].complete)return ELS[i];if(!ELS[i]){const e=new Image();e.onload=()=>{C.getObjects().forEach(o=>{if(o.win&&o.win.i==i)refx(o)});C.requestRenderAll()};e.src=IMG[i];ELS[i]=e}return null}
 function winfx(t){t.objectCaching=!t.bd;
 if(t.win&&t.win.i&&IMG[t.win.i]&&t.fx!='outline'){const e=imgEl(t.win.i),src=C.getObjects().find(o=>o.iid==t.win.i);
 if(e&&src){const w=t.win,sc=src.scaleX*w.s/100,tl=src.getPointByOrigin('left','top'),tt=t.getPointByOrigin('left','top'),q=t.scaleX||1;
 t.set('fill',new fabric.Pattern({source:e,repeat:'no-repeat',patternTransform:[sc/q,0,0,sc/q,(tl.x-tt.x+w.x/100*src.getScaledWidth())/q,(tl.y-tt.y+w.y/100*src.getScaledHeight())/q]}))}}
-if(t.bd)t.set({fill:'rgba(0,0,0,0)',shadow:null})}
+if(t.bd)t.set({fill:'rgba(0,0,0,0)',shadow:null});if(t.rvid)t.set({fill:'rgba(0,0,0,0)'})}
 function bdr(ctx){const os=C.getObjects().filter(o=>o.bd&&o.visible);if(!os.length||!ctx)return;const cw=ctx.canvas.width,chh=ctx.canvas.height,k=cw/C.width,vz=C.viewportTransform[0];
 os.forEach(o=>{const b=o.getBoundingRect(false,true),pd=4,rx=Math.max(0,Math.floor((b.left-pd)*k)),ry=Math.max(0,Math.floor((b.top-pd)*k)),rw=Math.min(cw-rx,Math.ceil((b.width+2*pd)*k)),rh=Math.min(chh-ry,Math.ceil((b.height+2*pd)*k));if(rw<2||rh<2)return;
 const mk=()=>{const c=document.createElement('canvas');c.width=rw;c.height=rh;return c},t=mk(),e=mk(),m=mk(),x=t.getContext('2d'),y=e.getContext('2d'),g=m.getContext('2d');
@@ -547,11 +563,11 @@ PJ.w=w;PJ.h=h;fit();snap();pp()}}
 const FD=o=>o.fd||(o.fd={on:0,c:null,o:0,a:90,l:100});
 function fdBlock(o){const F=o.fd||{on:0,c:null,o:0,a:90,l:100},A=Math.round(((F.a%360)+360)%360),dirs=[['270','⬆ Arriba'],['90','⬇ Abajo'],['180','⬅ Izquierda'],['0','➡ Derecha']];
 return sl('Desvanecer el color','fd',[['0','No'],['1','Sí, hacia otro color u opacidad']],F.on?'1':'0','0')+(F.on?col('Color final','fc',F.c||o.col||'#ffffff',o.col||'#ffffff')+rg('Opacidad del color final','fo',0,100,1,F.o,0)
-+`<div class=ct><label>Se desvanece hacia</label><div class=r>${dirs.map(d=>`<button data-a=fdir data-v=${d[0]} class="${A==+d[0]?'on':''}">${d[1]}</button>`).join('')}</div></div>`+rg('Ángulo manual (grados)','fa',0,360,1,A,90)+rg('Largo del desvanecido (%)','fl',10,100,1,F.l,100):'')}
++`<div class=ct><label>Se desvanece hacia</label><div class=r>${dirs.map(d=>`<button data-a=fdir data-v=${d[0]} class="${A==+d[0]?'on':''}">${d[1]}</button>`).join('')}</div></div>`+rg('Ángulo manual (grados)','fa',0,360,1,A,90)+rg('El desvanecido empieza en (%)','fs',0,95,1,F.s||0,0)+rg('El desvanecido termina en (%)','fl',10,100,1,F.l,100):'')}
 
 function fdSec(o){const F=o.fd||{on:0,c:null,o:0,a:90,l:100};return sec('Desvanecer color',sl('Desvanecer el color','fd',[['0','No'],['1','Sí']],F.on?'1':'0','0')+col('Color final','fc',F.c||o.col||'#ffffff',o.col||'#ffffff')+rg('Opacidad del color final','fo',0,100,1,F.o,0)+rg('Dirección (grados)','fa',0,360,1,F.a,90)+rg('Largo del desvanecido (%)','fl',10,100,1,F.l,100))}
 Object.assign(HELP,{so:'Centrado: el borde se reparte a ambos lados. Exterior: el borde queda solo por fuera y no achica la letra.',hc:'Color del halo que rodea las letras para que resalten.',hw:'Tamaño del halo. 0 = sin halo. No se usa si el efecto elegido ya tiene su propia sombra.',
-fd:'El color del texto se va desvaneciendo hacia otro color u opacidad. Con BLOOD, sirve para cambiar sus colores y su dirección.',fc:'Color al que llega el desvanecido. Por defecto, el mismo del texto.',fo:'0 = termina transparente, 100 = termina sólido.',fa:'Para una dirección exacta usá los botones de arriba. Esta barra sirve para ángulos intermedios: 0 = derecha, 90 = abajo, 180 = izquierda, 270 = arriba.',fl:'Qué parte del texto ocupa el desvanecido.'});
+fd:'El color del texto se va desvaneciendo hacia otro color u opacidad. Con BLOOD, sirve para cambiar sus colores y su dirección.',fc:'Color al que llega el desvanecido. Por defecto, el mismo del texto.',fo:'0 = termina transparente, 100 = termina sólido.',fa:'Para una dirección exacta usá los botones de arriba. Esta barra sirve para ángulos intermedios: 0 = derecha, 90 = abajo, 180 = izquierda, 270 = arriba.',fl:'Hasta qué punto del texto (de izquierda a derecha, o de arriba a abajo) llega el cambio. Después queda en el color final.',fs:'Hasta este punto el texto conserva su color sólido; recién ahí empieza a cambiar. La opacidad final solo afecta a la parte donde cambia.'});
 const ab2b=a=>{let s='';const u=new Uint8Array(a);for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s)},b2ab=b=>Uint8Array.from(atob(b),c=>c.charCodeAt(0)).buffer;
 async function bk(){return JSON.stringify((await all()).filter(p=>p.w||p.folder||p.font).map(p=>p.font?{...p,data:undefined,b64:ab2b(p.data)}:p))}
 async function fontsM(){const A=(await all()).filter(p=>p.font);M('<h3>Mis fuentes</h3><small class=hp>Las fuentes que importás quedan guardadas en este navegador y entran en el respaldo. Si borrás una, los textos que la usen se verán con otra.</small>'+(A.length?A.map(p=>`<div class=ly><span style="font-family:'${p.name}';font-size:20px">${esc(p.name)}<small>Abc 123 — vista previa</small></span><button data-keep=1 data-fu="${esc(p.name)}"><i>✓</i><em>Usar en el texto</em></button><button data-keep=1 data-fx2="${esc(p.name)}"><i>✕</i><em>Borrar</em></button></div>`).join(''):'<p>Todavía no importaste fuentes.</p>')+'<button>Cerrar</button>')}
@@ -559,9 +575,9 @@ async function fontsM(){const A=(await all()).filter(p=>p.font);M('<h3>Mis fuent
 /* ---------- panel deslizable, modo enfoque ---------- */
 const MOB=()=>matchMedia('(max-width:800px)').matches;let SHS='peek';
 function sheet(st){SHS=st;if(!MOB())return;const hs={peek:'38px',half:'calc(var(--h,100dvh)*.4)',full:'calc(var(--h,100dvh)*.74)'};$('#side').style.setProperty('--sheet',hs[st]);$('#tp').classList.toggle('on',st!='peek');setTimeout(()=>{if(C&&!$('#ed').hidden)fit()},230)}
-function focus(){$('#ed').classList.toggle('focus');setTimeout(()=>{if(C)fit()},60)}
-$('#fxb').onclick=focus;$('#mtop').onclick=$('#tools').onclick;
-document.addEventListener('keydown',e=>{if(e.key=='Escape'&&!$('#ed').hidden&&$('#ed').classList.contains('focus')&&!$('#cre'))focus()});
+function toggleFocus(){$('#ed').classList.toggle('focus');setTimeout(()=>{if(C)fit()},60)}
+$('#fxb').onclick=toggleFocus;$('#mtop').onclick=$('#tools').onclick;
+document.addEventListener('keydown',e=>{if(e.key=='Escape'&&!$('#ed').hidden&&$('#ed').classList.contains('focus')&&!$('#cre'))toggleFocus()});
 (()=>{const h=$('#shh'),sd=$('#side');let y0=null,h0=0,mvd=0;
 h.onpointerdown=e=>{h.setPointerCapture(e.pointerId);y0=e.clientY;h0=sd.offsetHeight;mvd=0;sd.style.transition='none'};
 h.onpointermove=e=>{if(y0==null)return;const d=y0-e.clientY;if(Math.abs(d)>4)mvd=1;if(mvd)sd.style.setProperty('--sheet',Math.max(38,Math.min(innerHeight*.8,h0+d))+'px')};
@@ -596,6 +612,107 @@ $('#trs').onclick=()=>{TH={...TH0};thSave();applyTheme();thM()};$('#tbi').onclic
 $('#bth').onclick=thM;
 $('#tbf').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const im=new Image();im.onload=async()=>{const k=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);
 THIMG=c.toDataURL('image/jpeg',.8);await put({id:'theme:bg',tbg:1,data:THIMG});TH.bg='img';thSave();applyTheme();if(!$('#dl').hidden)thM()};im.src=URL.createObjectURL(f)};
+
+/* ---------- borrador ---------- */
+const ER={on:0,mode:'e',scope:'sel',size:60,hard:80,op:100,last:null,set:new Set(),drag:null,cancel:0,warned:0};
+function bgc(){const w=$('#wrap');if(w&&C)w.classList.toggle('tr',!C.backgroundColor)}
+function toast(t,act,fn){let e=$('#toast');if(!e){e=document.createElement('div');e.id='toast';document.body.appendChild(e)}e.innerHTML='';const sp=document.createElement('span');sp.textContent=t;e.appendChild(sp);if(act){const b=document.createElement('button');b.textContent=act;b.onclick=()=>{e.style.display='none';fn()};e.appendChild(b)}e.style.display='flex';clearTimeout(toast.t);toast.t=setTimeout(()=>{e.style.display='none'},4500)}
+const erOkImg=o=>o.type=='image'&&o.visible&&!o.lockMovementX;
+function ERT(){const all=C.getObjects();if(ER.scope=='all')return all.filter(erOkImg);if(ER.scope=='chk')return all.filter(o=>ER.set.has(o)&&erOkImg(o));const a=C.getActiveObject()||ER.last;return a&&a.type=='image'&&erOkImg(a)?[a]:[]}
+function ERX(){const all=C.getObjects().filter(o=>o.type=='textbox'&&o.visible&&!o.lockMovementX);if(ER.scope=='all')return all;if(ER.scope=='chk')return all.filter(o=>ER.set.has(o));const a=C.getActiveObject()||ER.last;return a&&a.type=='textbox'?[a]:[]}
+const snapCv=c=>{const n=document.createElement('canvas');n.width=c.width;n.height=c.height;n.getContext('2d').drawImage(c,0,0);return n};
+function erPrep(o){if(o._ew&&o._originalElement===o._ew)return;if(o._ew)o.eo=null;const el=o._originalElement,w=el.naturalWidth||el.width,h=el.naturalHeight||el.height,wk=document.createElement('canvas');wk.width=w;wk.height=h;wk.getContext('2d').drawImage(el,0,0);
+if(!o.eo){o.eo=uid();o._eoC=snapCv(wk);IMG[o.eo]=o._eoC}else{const v=IMG[o.eo];if(typeof v=='string'){const im=new Image();im.onload=()=>{o._eoC=im};im.src=v}else o._eoC=v}
+o._ew=wk;o.setElement(wk,{width:o.width,height:o.height})}
+function erStamp(o,p,rad){const m=fabric.util.invertTransform(o.calcTransformMatrix()),q=fabric.util.transformPoint(p,m),x=q.x+o.width/2+o.cropX,y=q.y+o.height/2+o.cropY,sc=(Math.abs(o.scaleX)+Math.abs(o.scaleY))/2,r=Math.max(.5,rad/sc),c=o._ew.getContext('2d'),h=ER.hard/100,a=ER.op/100;
+if(ER.mode=='e'){c.save();c.globalCompositeOperation='destination-out';const g=c.createRadialGradient(x,y,r*h,x,y,r);g.addColorStop(0,`rgba(0,0,0,${a})`);g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.fillRect(x-r,y-r,2*r,2*r);c.restore()}
+else if(o._eoC){const sz=Math.max(2,Math.ceil(r*2)),t=document.createElement('canvas');t.width=t.height=sz;const u=t.getContext('2d');u.drawImage(o._eoC,x-r,y-r,sz,sz,0,0,sz,sz);u.globalCompositeOperation='destination-in';const g=u.createRadialGradient(r,r,r*h,r,r,r);g.addColorStop(0,`rgba(0,0,0,${a})`);g.addColorStop(1,'rgba(0,0,0,0)');u.fillStyle=g;u.fillRect(0,0,sz,sz);c.drawImage(t,x-r,y-r)}
+o.dirty=true}
+function erSeg(a,b){const rad=ER.size/2,st=Math.max(1,rad*.3),d=Math.hypot(b.x-a.x,b.y-a.y),n=Math.max(1,Math.ceil(d/st));for(let i=1;i<=n;i++){const p={x:a.x+(b.x-a.x)*i/n,y:a.y+(b.y-a.y)*i/n};ER.drag.t.forEach(o=>erStamp(o,p,rad))}C.requestRenderAll()}
+function rast(list){list.forEach(o=>{const b=o.getBoundingRect(true,true),idx=C.getObjects().indexOf(o),m=Math.min(2,2048/Math.max(b.width,b.height));o.cloneAsImage(im=>{im.set({originX:'left',originY:'top',left:b.left,top:b.top,scaleX:b.width/im.width,scaleY:b.height/im.height,name:o.name||'Texto',globalCompositeOperation:o.globalCompositeOperation,opacity:o.opacity,_f:{},_s:{}});C.remove(o);C.insertAt(im,idx);C.requestRenderAll();pp();L()},{multiplier:m,enableRetinaScaling:false})})}
+function erInit(){
+C.on('mouse:down',e=>{if(!ER.on||ER.cancel)return;const tx=ERX();if(tx.length&&!ER.warned){ER.warned=1;toast('Los textos no se borran con el pincel.','Convertir en imagen',()=>{rast(tx);ER.warned=0})}
+const t=ERT();if(!t.length){if(!tx.length)toast('Elegí una capa de imagen (o cambiá a “capas marcadas” o “todas”).');return}t.forEach(erPrep);ER.drag={last:e.absolutePointer,moved:0,t}});
+C.on('mouse:move',e=>{if(!ER.on)return;const c=$('#ercur'),sz=ER.size*z,pt=e.pointer;c.style.display='block';c.style.width=c.style.height=sz+'px';c.style.left=(pt.x-sz/2)+'px';c.style.top=(pt.y-sz/2)+'px';
+if(!ER.drag||ER.cancel)return;const p=e.absolutePointer;if(!ER.drag.moved){if(Math.hypot(p.x-ER.drag.last.x,p.y-ER.drag.last.y)*z<3)return;ER.drag.moved=1;ER.drag.t.forEach(o=>erStamp(o,ER.drag.last,ER.size/2))}erSeg(ER.drag.last,p);ER.drag.last=p});
+C.on('mouse:up',e=>{const d=ER.drag;ER.drag=null;const was=ER.cancel;ER.cancel=0;if(!ER.on||!d||was)return;if(!d.moved){d.t.forEach(o=>erStamp(o,d.last,ER.size/2));C.requestRenderAll()}
+d.t.forEach(o=>{o.iid=uid();IMG[o.iid]=snapCv(o._ew);if(o.filters&&o.filters.length)o.applyFilters();o.dirty=true});snap()})}
+function erOn(){const a=C.getActiveObject();if(a)ER.last=a;ER.on=1;C.discardActiveObject();C.skipTargetFind=true;C.selection=false;C.defaultCursor='crosshair';document.querySelectorAll('[data-t=er]').forEach(b=>b.classList.add('on'));if(MOB())sheet('half');pp();L()}
+function erOff(){ER.on=0;ER.drag=null;C.skipTargetFind=false;C.selection=true;C.defaultCursor='default';$('#ercur').style.display='none';document.querySelectorAll('[data-t=er]').forEach(b=>b.classList.remove('on'));pp();L()}
+function erPanel(){const t=ERT();return `<h3>Borrador</h3><div class=r><button data-a=erm data-v=e class="${ER.mode=='e'?'on':''}">Borrar</button><button data-a=erm data-v=r class="${ER.mode=='r'?'on':''}">Restaurar</button></div>`+sl('Dónde borrar','ers',[['sel','Solo la capa seleccionada'],['chk','Las capas que marque'],['all','Todas las capas visibles']],ER.scope,'sel')+rg('Tamaño del pincel','ersz',2,600,1,ER.size,60)+rg('Dureza del borde','erh',0,100,1,ER.hard,80)+rg('Opacidad del pincel','ero',5,100,1,ER.op,100)
++`<small class=hp>${ER.scope=='sel'?(t[0]?'Borrando en: '+esc(t[0].name||'imagen')+'.':'Elegí una capa desde el panel de capas (botón “Editar”).'):ER.scope=='chk'?'Marcá la casilla “afectar con el borrador” en las capas de la lista que querés borrar a la vez.':'Un trazo borra en todas las capas de imagen visibles y desbloqueadas.'} Los textos no se borran por píxeles. “Restaurar” devuelve lo que borraste. Dos dedos o la rueda para el zoom.</small><div class=r><button data-a=erx>Terminar y volver a editar</button></div>`}
+document.addEventListener('keydown',e=>{if(e.key=='Escape'&&ER.on&&!$('#cre'))erOff()});
+Object.assign(HELP,{ers:'Elegí en qué capas actúa el pincel.',ersz:'Tamaño del pincel en píxeles del lienzo.',erh:'Qué tan suave es el borde del pincel. 100 = borde duro.',ero:'Cuánto borra cada pasada. Bajo = borra de a poco.'});
+
+/* ---------- texto en curva ---------- */
+(function(){const P=fabric.Textbox.prototype,mc=fabric.util.createCanvasElement().getContext('2d'),oi=P.initDimensions,oc=P._renderTextCommon;
+P.initDimensions=function(){oi.call(this);if(this.cv&&this.cv.m)this._cvLayout()};
+P._cvLayout=function(){const c=this.cv,fs=this.fontSize,txt=String(this.text).replace(/\n/g,' ');mc.font=`${this.fontStyle||'normal'} ${this.fontWeight||'normal'} ${fs}px "${this.fontFamily}"`;
+const sp=(this.charSpacing||0)/1000*fs,ch=[...txt],ws=ch.map(x=>mc.measureText(x).width+sp),len=ws.reduce((a,b)=>a+b,0)||1,k=c.k||0;let fn;
+if(c.m=='arc'&&Math.abs(k)>=1){const R=len/(Math.abs(k)/100*2*Math.PI),sg=k>0?1:-1;fn=u=>{const a=(sg>0?-Math.PI/2:Math.PI/2)+sg*u/R;return{x:R*Math.cos(a),y:R*Math.sin(a)+(sg>0?R:-R)}}}
+else if(c.m=='wave'){const A=(c.a==null?60:c.a)/100*fs,Lw=len*(c.l||100)/100;fn=u=>({x:u,y:A*Math.sin(2*Math.PI*u/Lw)})}
+else if(c.m=='spiral'){const gap=(c.g||1.2)*fs,r0=fs*.9,ds=fs*.25,pts=[];let th=0,u=0;while(u<len+fs*2){const q=r0+gap*th/(2*Math.PI);pts.push([q*Math.cos(th-Math.PI/2),q*Math.sin(th-Math.PI/2)]);th+=ds/q;u+=ds}
+fn=v=>{const t=Math.max(0,v)/ds,i=Math.min(pts.length-2,Math.floor(t)),f=Math.min(1,t-i),a=pts[i],b=pts[i+1];return{x:a[0]+(b[0]-a[0])*f,y:a[1]+(b[1]-a[1])*f}}}
+else fn=u=>({x:u,y:0});
+let u=(c.m=='spiral'?0:-len/2)+(c.s||0)/100*len;this._cvP=ch.map((x,i)=>{const w=ws[i],m=u+w/2,p=fn(m),a=fn(m-1),b=fn(m+1);u+=w;return{ch:x,x:p.x,y:p.y,a:Math.atan2(b.y-a.y,b.x-a.x),w}});
+const pad=fs*.9;let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;this._cvP.forEach(q=>{x0=Math.min(x0,q.x-pad);x1=Math.max(x1,q.x+pad);y0=Math.min(y0,q.y-pad);y1=Math.max(y1,q.y+pad)});
+this._cvOx=-(x0+x1)/2;this._cvOy=-(y0+y1)/2;this.width=Math.ceil(x1-x0);this.height=Math.ceil(y1-y0)};
+P._renderTextCommon=function(ctx,method){if(!(this.cv&&this.cv.m&&this._cvP))return oc.call(this,ctx,method);ctx.save();ctx.translate(this._cvOx,this._cvOy);
+this._cvP.forEach((q,i)=>{ctx.save();ctx.translate(q.x,q.y);ctx.rotate(q.a);this._renderChar(method,ctx,0,i,q.ch,-q.w/2,0);ctx.restore()});ctx.restore()}})();
+function cvBlock(o){const c=o.cv||{m:''};return sl('Texto en curva','cvm',[['0','Recto (sin curva)'],['arc','Arco / círculo'],['wave','Ola'],['spiral','Espiral']],c.m||'0','0')
++(c.m=='arc'?rg('Curvatura (100 = círculo completo, negativo = hacia abajo)','cvk',-100,100,1,c.k==null?60:c.k,60)+rg('Girar el texto sobre la curva (%)','cvs',-50,50,1,c.s||0,0):'')
++(c.m=='wave'?rg('Altura de la ola','cva',0,200,1,c.a==null?60:c.a,60)+rg('Largo de la ola (%)','cvl',25,300,1,c.l||100,100)+rg('Mover el texto (%)','cvs',-50,50,1,c.s||0,0):'')
++(c.m=='spiral'?rg('Separación entre vueltas','cvg',.5,3,.05,c.g||1.2,1.2)+rg('Girar el texto (%)','cvs',-50,50,1,c.s||0,0):'')}
+Object.assign(HELP,{cvm:'Hace que las letras sigan una curva. En texto curvo el desvanecido y los degradados se aplican letra por letra, y el texto se edita desde la caja “Contenido” del panel.',cvk:'Cuánto se curva. 100 = círculo completo. Valores negativos curvan hacia abajo o dejan las letras por dentro del círculo.',cvs:'Corre el texto a lo largo de la curva.',cva:'Qué tan alta es la ola.',cvl:'Qué tan larga es cada ola.',cvg:'Distancia entre una vuelta y la siguiente.'});
+/* ---------- texto como ventana: revelar y perforar ---------- */
+const LID=o=>o.lid||(o.lid=uid());
+function mkClip(tx){return new fabric.Textbox(tx.text,{left:tx.left,top:tx.top,originX:tx.originX,originY:tx.originY,width:tx.width,scaleX:tx.scaleX,scaleY:tx.scaleY,angle:tx.angle,flipX:tx.flipX,flipY:tx.flipY,fontFamily:tx.fontFamily,fontSize:tx.fontSize,fontWeight:tx.fontWeight,fontStyle:tx.fontStyle,charSpacing:tx.charSpacing,lineHeight:tx.lineHeight,textAlign:tx.textAlign,fill:'#000',stroke:null,strokeWidth:0,absolutePositioned:true,inverted:true,objectCaching:false,cv:tx.cv?{...tx.cv}:null})}
+function syncPf(){if(!C)return;const os=C.getObjects();os.forEach(t=>{if(!t.pf)return;const tx=os.find(q=>q.lid==t.pf);if(!tx){t.clipPath=null;t.pf=null;return}t.clipPath=mkClip(tx);t.dirty=true});C.requestRenderAll()}
+function revealOn(t,c){if(t.rvid&&C.getObjects().find(q=>q.lid==t.rvid))return;const id=LID(t),cov=new fabric.Rect({left:0,top:0,width:PJ.w,height:PJ.h,fill:c||'#000000',name:'Cubierta de '+(t.name||'texto'),thru:true,evented:false,lid:uid(),pf:id,_f:{},_s:{}});t.rvid=cov.lid;C.insertAt(cov,C.getObjects().indexOf(t));syncPf();refx(t)}
+function revealOff(t){const cov=t.rvid&&C.getObjects().find(q=>q.lid==t.rvid);if(cov)C.remove(cov);t.rvid=null;refx(t)}
+function winSec2(o){const others=C.getObjects().filter(q=>q!==o&&!(o.rvid&&q.lid==o.rvid)),lk=o.lid?C.getObjects().filter(q=>q.pf==o.lid&&!(o.rvid&&q.lid==o.rvid)):[],cov=o.rvid&&C.getObjects().find(q=>q.lid==o.rvid);
+return sec('Texto como ventana (ver lo de abajo)',`<small class=hp>“Revelar lo de abajo” pone una cubierta sobre todo lo que está detrás del texto y hace que las letras sean agujeros en ella: se ve lo de atrás solo dentro de las letras, sin tener que alinear nada. Podés usar el contorno para que resalten.</small><div class=r><button data-a=rev>${o.rvid?'Quitar “Revelar lo de abajo”':'Revelar lo de abajo'}</button></div>`
++(o.rvid&&cov?col('Color de la cubierta','rvc',cov.fill||'#000000','#000000'):'')+sl('Perforar otra capa con este texto','pfa',[['','Elegí una capa…']].concat(others.map(q=>[LID(q),q.name||q.type])),'','')
++lk.map(q=>`<div class=r><button data-a=pfx data-v="${q.lid}">Quitar perforación de «${esc(q.name||q.type)}»</button></div>`).join(''))}
+Object.assign(HELP,{pfa:'La capa elegida queda con las letras de este texto como agujeros (se ve lo que hay debajo de esa capa). Sirve, por ejemplo, para una textura o un color que cubre todo.',rvc:'Color de la cubierta que tapa lo de atrás. También podés elegir otra capa en “Perforar otra capa”.',rf:'Color del relleno de esta capa.'});
+
+/* ---------- perspectiva de 4 esquinas ---------- */
+let PS=null;
+function homog(S,D){const A=[],b=[];for(let i=0;i<4;i++){const[x,y]=S[i],[u,v]=D[i];A.push([x,y,1,0,0,0,-u*x,-u*y]);b.push(u);A.push([0,0,0,x,y,1,-v*x,-v*y]);b.push(v)}
+const n=8;for(let i=0;i<n;i++){let m=i;for(let j=i+1;j<n;j++)if(Math.abs(A[j][i])>Math.abs(A[m][i]))m=j;[A[i],A[m]]=[A[m],A[i]];[b[i],b[m]]=[b[m],b[i]];const d=A[i][i]||1e-12;for(let j=i+1;j<n;j++){const f=A[j][i]/d;for(let k=i;k<n;k++)A[j][k]-=f*A[i][k];b[j]-=f*b[i]}}
+const h=Array(8);for(let i=n-1;i>=0;i--){let t=b[i];for(let k=i+1;k<n;k++)t-=A[i][k]*h[k];h[i]=t/(A[i][i]||1e-12)}return[...h,1]}
+const hap=(H,x,y)=>{const w=H[6]*x+H[7]*y+1;return[(H[0]*x+H[1]*y+H[2])/w,(H[3]*x+H[4]*y+H[5])/w]};
+function tri(x,im,s0,s1,s2,d0,d1,d2){const cx=(d0[0]+d1[0]+d2[0])/3,cy=(d0[1]+d1[1]+d2[1])/3,ex=q=>{const dx=q[0]-cx,dy=q[1]-cy,l=Math.hypot(dx,dy)||1;return[q[0]+dx/l*.7,q[1]+dy/l*.7]},e0=ex(d0),e1=ex(d1),e2=ex(d2);
+x.save();x.beginPath();x.moveTo(e0[0],e0[1]);x.lineTo(e1[0],e1[1]);x.lineTo(e2[0],e2[1]);x.closePath();x.clip();
+const den=s0[0]*(s1[1]-s2[1])+s1[0]*(s2[1]-s0[1])+s2[0]*(s0[1]-s1[1]);if(Math.abs(den)<1e-9){x.restore();return}
+const a=(d0[0]*(s1[1]-s2[1])+d1[0]*(s2[1]-s0[1])+d2[0]*(s0[1]-s1[1]))/den,c=(d0[0]*(s2[0]-s1[0])+d1[0]*(s0[0]-s2[0])+d2[0]*(s1[0]-s0[0]))/den,e=(d0[0]*(s1[0]*s2[1]-s2[0]*s1[1])+d1[0]*(s2[0]*s0[1]-s0[0]*s2[1])+d2[0]*(s0[0]*s1[1]-s1[0]*s0[1]))/den,
+b=(d0[1]*(s1[1]-s2[1])+d1[1]*(s2[1]-s0[1])+d2[1]*(s0[1]-s1[1]))/den,d=(d0[1]*(s2[0]-s1[0])+d1[1]*(s0[0]-s2[0])+d2[1]*(s1[0]-s0[0]))/den,f=(d0[1]*(s1[0]*s2[1]-s2[0]*s1[1])+d1[1]*(s2[0]*s0[1]-s0[0]*s2[1])+d2[1]*(s0[0]*s1[1]-s1[0]*s0[1]))/den;
+const sx=Math.max(0,Math.floor(Math.min(s0[0],s1[0],s2[0])-1)),sy=Math.max(0,Math.floor(Math.min(s0[1],s1[1],s2[1])-1)),sw=Math.min(im.width-sx,Math.ceil(Math.max(s0[0],s1[0],s2[0])-sx+2)),sh=Math.min(im.height-sy,Math.ceil(Math.max(s0[1],s1[1],s2[1])-sy+2));
+x.transform(a,b,c,d,e,f);if(sw>0&&sh>0)x.drawImage(im,sx,sy,sw,sh,sx,sy,sw,sh);x.restore()}
+function psBake(src,q,res,n){const xs=q.map(a=>a[0]),ys=q.map(a=>a[1]),x0=Math.min(...xs),y0=Math.min(...ys),bw=Math.max(...xs)-x0,bh=Math.max(...ys)-y0,k=Math.min(1,res/Math.max(bw,bh)),W=Math.max(2,Math.ceil(bw*k)),H2=Math.max(2,Math.ceil(bh*k)),c=document.createElement('canvas');c.width=W;c.height=H2;const x=c.getContext('2d');
+const D=q.map(a=>[(a[0]-x0)*k,(a[1]-y0)*k]),w=src.width,h=src.height,Hm=homog([[0,0],[w,0],[w,h],[0,h]],D);
+for(let i=0;i<n;i++)for(let j=0;j<n;j++){const a=[w*i/n,h*j/n],b=[w*(i+1)/n,h*j/n],cc=[w*(i+1)/n,h*(j+1)/n],d=[w*i/n,h*(j+1)/n],A=hap(Hm,...a),B=hap(Hm,...b),Cc=hap(Hm,...cc),Dd=hap(Hm,...d);tri(x,src,a,b,d,A,B,Dd);tri(x,src,b,cc,d,B,Cc,Dd)}
+return{c,x0,y0,k,D:D.map(a=>a.slice()),W,H:H2}}
+const convex=P=>{let sg=0;for(let i=0;i<4;i++){const a=P[i],b=P[(i+1)%4],c=P[(i+2)%4],cr=(b[0]-a[0])*(c[1]-b[1])-(b[1]-a[1])*(c[0]-b[0]);if(Math.abs(cr)<1e-6)return false;const t=cr>0?1:-1;if(sg&&t!=sg)return false;sg=t}return true};
+async function psOn(o){if(!o||o.type!='image')return;if(ER.on)erOff();let src,q;const el=o._originalElement,EW=el.naturalWidth||el.width,reuse=o.po&&!o.eo&&o.cropX==0&&o.cropY==0&&o.width==EW&&IMG[o.po];
+if(reuse){const v=IMG[o.po];let im=v;if(typeof v=='string')im=await new Promise(rs=>{const i=new Image();i.onload=()=>rs(i);i.src=v});src=document.createElement('canvas');src.width=im.width;src.height=im.height;src.getContext('2d').drawImage(im,0,0);const M=o.calcTransformMatrix();q=o.pq.map(p=>{const t=fabric.util.transformPoint({x:p[0]-o.width/2,y:p[1]-o.height/2},M);return[t.x,t.y]})}
+else{if(o.eo)toast('Esta imagen tiene borrados: se mantienen, pero ya no se podrán restaurar.');src=document.createElement('canvas');src.width=o.width;src.height=o.height;const x=src.getContext('2d');if(o.flipX){x.translate(src.width,0);x.scale(-1,1)}if(o.flipY){x.translate(0,src.height);x.scale(1,-1)}x.drawImage(el,o.cropX,o.cropY,o.width,o.height,0,0,o.width,o.height);const c0=o.getCenterPoint(),M0=fabric.util.composeMatrix({angle:o.angle,translateX:c0.x,translateY:c0.y,scaleX:o.scaleX,scaleY:o.scaleY});q=[[-1,-1],[1,-1],[1,1],[-1,1]].map(u=>{const t=fabric.util.transformPoint({x:u[0]*o.width/2,y:u[1]*o.height/2},M0);return[t.x,t.y]})}
+const sm=document.createElement('canvas'),f=Math.min(1,700/Math.max(src.width,src.height));sm.width=Math.max(2,Math.round(src.width*f));sm.height=Math.max(2,Math.round(src.height*f));sm.getContext('2d').drawImage(src,0,0,sm.width,sm.height);
+PS={o,src,sm,q,q0:q.map(a=>a.slice()),po:reuse?o.po:uid(),drag:null,raf:0,D:null};C.discardActiveObject();C.skipTargetFind=true;C.selection=false;if(MOB())sheet('half');pp();psDraw()}
+function psApplyNow(final){const o=PS.o,r=psBake(final?PS.src:PS.sm,PS.q,final?2048:700,final?20:8);PS.D=r.D;o.setElement(r.c,{width:r.W,height:r.H});o.set({cropX:0,cropY:0,scaleX:1/r.k,scaleY:1/r.k,angle:0,flipX:false,flipY:false,originX:'left',originY:'top',left:r.x0,top:r.y0});o.clipPath=null;o.shp=null;o.inv=false;if(final&&o.filters&&o.filters.length)o.applyFilters();o.dirty=true;o.setCoords();C.requestRenderAll()}
+function psDraw(){let v=$('#psv');if(!PS){if(v)v.remove();return}const AC=getComputedStyle(document.documentElement).getPropertyValue('--a').trim()||'#d4ff00';
+if(!v){v=document.createElementNS('http://www.w3.org/2000/svg','svg');v.id='psv';$('#wrap').appendChild(v);
+v.onpointerdown=e=>{const g=e.target.closest('[data-pi]');if(!g||!PS)return;PS.drag=+g.dataset.pi;g.setPointerCapture(e.pointerId);e.preventDefault()};
+v.onpointermove=e=>{if(!PS||PS.drag==null)return;const r=$('#wrap').getBoundingClientRect(),t=PS.q.map(a=>a.slice());t[PS.drag]=[(e.clientX-r.left)/z,(e.clientY-r.top)/z];if(!convex(t))return;PS.q=t;psPos();if(!PS.raf)PS.raf=requestAnimationFrame(()=>{PS.raf=0;if(PS)psApplyNow(false)})};
+v.onpointerup=()=>{if(PS&&PS.drag!=null){PS.drag=null;psApplyNow(true)}}}
+v.setAttribute('width',PJ.w*z);v.setAttribute('height',PJ.h*z);
+v.innerHTML='<polygon fill="rgba(212,255,0,.08)" stroke="'+AC+'" stroke-width="1.5"/>'+[0,1,2,3].map(i=>`<g data-pi=${i} style="touch-action:none;cursor:move"><circle r=18 fill="transparent"/><path d="M-9 0H9M0 -9V9" stroke="#000" stroke-width="3.6"/><path d="M-9 0H9M0 -9V9" stroke="#fff" stroke-width="1.4"/><circle r=2 fill="${AC}"/></g>`).join('');psPos()}
+function psPos(){const v=$('#psv');if(!v||!PS)return;v.querySelector('polygon').setAttribute('points',PS.q.map(a=>(a[0]*z)+','+(a[1]*z)).join(' '));v.querySelectorAll('[data-pi]').forEach(g=>{const a=PS.q[+g.dataset.pi];g.setAttribute('transform',`translate(${a[0]*z},${a[1]*z})`)})}
+function psOff(ok){const P=PS;if(!P)return;PS=null;psDraw();C.skipTargetFind=false;C.selection=true;
+if(!ok){jump(hi);return}
+PS=P;psApplyNow(true);PS=null;const o=P.o;o.po=P.po;IMG[o.po]=P.src;o.pq=P.D;o.iid=uid();IMG[o.iid]=snapCv(o._originalElement);o.eo=null;o._ew=null;snap();C.setActiveObject(o);pp();L()}
+function psPanel(){return '<h3>Perspectiva</h3><small class=hp>Arrastrá las 4 esquinas para acomodar la imagen sobre la superficie que quieras, por ejemplo una pared vista en ángulo. Las esquinas no pueden cruzarse. Con el modo de fusión “Multiplicar” puede quedar como pintada en la pared.</small><div class=r><button data-a=psok class=pri>Listo</button><button data-a=psrs>Volver al cuadro original</button><button data-a=psno>Cancelar</button></div>'}
+document.addEventListener('keydown',e=>{if(e.key=='Escape'&&PS)psOff(0)});
 
 const sv=()=>document.documentElement.style.setProperty('--h',innerHeight+'px');sv();addEventListener('resize',sv);
 let dp;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e});
